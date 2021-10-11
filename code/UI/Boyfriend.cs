@@ -69,8 +69,11 @@ public partial class Boyfriend : Entity
         //Set the position of the actor
         Actor.Position = Position;
 
+        //Flip the Actor if facing right
+        Actor.SetClass("flip", Character.facingRight);
+
         //Set the antialiasing flag
-        Actor.SetClass("pixel", !Character.antialiasing);
+        //Actor.SetClass("pixel", !Character.antialiasing);
     }
 
     [ClientRpc]

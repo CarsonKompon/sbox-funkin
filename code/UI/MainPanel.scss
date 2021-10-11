@@ -4,6 +4,7 @@ rootpanel
     width: 1920px;
     height: 100%;
     justify-content: center;
+    z-index: -10000;
 }
 
 GameManager
@@ -12,7 +13,9 @@ GameManager
     width: 1920px;
     height: 100%;
     justify-content: center;
+    z-index: -10000;
 }
+
 
 .boyfriend{
     
@@ -22,7 +25,11 @@ GameManager
     width: 400px;
     height: 400px;
     position: absolute;
-    &.pixel{
-        image-rendering: pixelated;
+    transform: scaleX(1);
+    // &.pixel{
+    //     image-rendering: pixelated;
+    // }
+    &.flip{
+        transform: scaleX(2);
     }
 }

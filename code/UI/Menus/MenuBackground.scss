@@ -1,0 +1,13 @@
+.bg{
+    
+	background-image: url("/sprites/menu/menu_background.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    top: -240px;
+    left: -240px;
+    width: 2400px;
+    height: 1350px;
+    position: absolute;
+    transition: all 0.1s ease;
+    z-index: -1000;
+}

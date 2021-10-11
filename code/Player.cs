@@ -26,6 +26,8 @@ partial class FunkinPlayer : Player
     [Net, Predicted] public bool inputRightPress {get; set;} = false;
     [Net, Predicted] public bool inputRightDown {get; set;} = false;
 
+    [Net] public bool isActive {get; set;} = false;
+
 	public override void Respawn()
 	{
 		SetModel( "models/citizen/citizen.vmdl" );
@@ -43,26 +45,32 @@ partial class FunkinPlayer : Player
         
         var _steamid = cl.SteamId;
 
-        if(inputUpDown){
-            Boyfriend.SetState(_steamid, (int)BoyfriendState.Up);
-        }else if(inputDownDown){
-            Boyfriend.SetState(_steamid, (int)BoyfriendState.Down);
-        }else if(inputLeftDown){
-            Boyfriend.SetState(_steamid, (int)BoyfriendState.Left);
-        }else if(inputRightDown){
-            Boyfriend.SetState(_steamid, (int)BoyfriendState.Right);
-        }else{
-            Boyfriend.SetState(_steamid, (int)BoyfriendState.Idle);
-        }
+        if(isActive){
 
-        if(Input.Pressed(InputButton.Reload)){
-            Boyfriend.SetCharacter(_steamid, Rand.FromList(FunkinGame.Characters).id);
-            Boyfriend.SetPosition(_steamid, new Vector2( Rand.Int(200,1920-200), Rand.Int(200, 1080-200)));
+            if(inputUpDown){
+                Boyfriend.SetState(_steamid, (int)BoyfriendState.Up);
+            }else if(inputDownDown){
+                Boyfriend.SetState(_steamid, (int)BoyfriendState.Down);
+            }else if(inputLeftDown){
+                Boyfriend.SetState(_steamid, (int)BoyfriendState.Left);
+            }else if(inputRightDown){
+                Boyfriend.SetState(_steamid, (int)BoyfriendState.Right);
+            }else{
+                Boyfriend.SetState(_steamid, (int)BoyfriendState.Idle);
+            }
+
+            if(Input.Pressed(InputButton.Reload)){
+                if( IsServer ){
+                    Boyfriend.SetCharacter(_steamid, Rand.FromList(FunkinGame.Characters).id);
+                    Boyfriend.SetPosition(_steamid, new Vector2( Rand.Int(200,1920-200), Rand.Int(200, 1080-200)));
+                }
+            }
         }
 
         inputUpPress = false;
         inputDownPress = false;
         inputLeftPress = false;
         inputRightPress = false;
+
 	}
 }

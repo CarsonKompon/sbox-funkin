@@ -1,5 +1,7 @@
 using Sandbox;
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 
 [Library( "funkin", Title = "Funkin" )]
@@ -9,6 +11,7 @@ public partial class FunkinGame : Sandbox.Game
     [Net] public static List<Client> CurrentPlayers {get; set;} = new();
 
     public static List<CharacterBase> Characters = new List<CharacterBase>();
+    public static List<ChartBase> Charts = new List<ChartBase>();
 
     public FunkinGame()
     {
@@ -16,7 +19,7 @@ public partial class FunkinGame : Sandbox.Game
             _ = new MainPanel();
 
         }
-        InitCharacters();
+        InitClasses();
     }
 
     [Event.Tick]
@@ -29,12 +32,28 @@ public partial class FunkinGame : Sandbox.Game
     }
 
     [Event.Hotload] //Reload Characters on Hotload (Makes life easier while developing)
-	public static void InitCharacters(){
+	public static void InitClasses(){
+        //Load characters
 		Characters = new();
-		//Load events from attribute
 		foreach(CharacterBase _char in Library.GetAttributes<CharacterBase>()){
 			Characters.Add(_char.Create<CharacterBase>());
 		}
+        //Load charts
+        Charts = new();
+        foreach(ChartBase _chart in Library.GetAllAttributes<ChartBase>()){
+            var _new = _chart.Create<ChartBase>();
+            try
+            {
+                var _json = FileSystem.Data.ReadJson<ChartFile>(_new.jsonFile);
+
+                _new.Chart = _json;
+
+                Log.Info(_new.Chart.Song.Name);
+
+                Charts.Add(_new);
+            }
+            catch (Exception e) { Log.Trace(e); }
+        }
 	}
 
     public override void ClientJoined( Client client )

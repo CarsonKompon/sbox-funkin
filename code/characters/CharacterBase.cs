@@ -8,11 +8,19 @@ public class CharacterBase : LibraryAttribute{
     public virtual bool antialiasing {get;set;} = true;
     
     public virtual int idleFrames {get;set;} = 6;
-    public virtual string spriteIdle{ get{ return "/sprites/" + id + "/idle"; } }
-    public virtual string spriteUp{ get{ return "/sprites/" + id + "/up"; } }
-    public virtual string spriteDown{ get{ return "/sprites/" + id + "/down"; } }
-    public virtual string spriteLeft{ get{ return "/sprites/" + id + "/left"; } }
-    public virtual string spriteRight{ get{ return "/sprites/" + id + "/right"; } }
+    public virtual string spriteIdle{ get{ return "/sprites/characters/" + id + "/idle"; } }
+    public virtual string spriteUp{ get{ return "/sprites/characters/" + id + "/up"; } }
+    public virtual string spriteDown{ get{ return "/sprites/characters/" + id + "/down"; } }
+    public virtual string spriteLeft{ get{
+        if(facingRight) return "/sprites/characters/" + id + "/right";
+        else return "/sprites/characters/" + id + "/left";
+        }
+    }
+    public virtual string spriteRight{ get{
+        if(facingRight) return "/sprites/characters/" + id + "/left";
+        else return "/sprites/characters/" + id + "/right";
+        }
+    }
 
     public virtual string GetSpriteFromState(BoyfriendState _state){
         if(_state == BoyfriendState.Up) return spriteUp;

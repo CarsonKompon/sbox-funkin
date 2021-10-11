@@ -1,0 +1,102 @@
+.root
+{  
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    transition: all 1s ease-out;
+
+    &.hide
+    {
+        width: 0px;
+        height: 0px;
+        left: -1920px;
+        top: 540px;
+        pointer-events: none;
+    }
+
+
+}
+
+.menu
+{
+    width: 50%;
+    height: 50%; 
+    align-self: center;
+    top: 200px;
+    left: 480px;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    transition: all 0.1s ease-in;
+    overflow: hidden;
+
+}
+
+.logo
+{
+    background-image: url("/sprites/logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    width: 900px;
+    height: 400px;
+    left: 510px;
+    top: 20px;
+    z-index: 100;
+    overflow: hidden;
+}
+
+button
+{
+    color: black;
+    font-family: Friday_Funkin;
+    font-size: 92px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.05s ease-in;
+    transform: scale( 1 );
+    z-index: 1000;
+
+    &:hover
+    {
+        transform: scale( 1.1 );
+    }
+}
+
+.column
+{
+flex-direction: column;
+
+.row
+{
+    background-color: rgba( #444, 0.1 );
+    padding: 4px;
+    margin-bottom: 2px;
+    border-radius: 4px;
+    flex-direction: row;
+
+    .label
+    {
+        width: 200px;
+        text-align: left;
+        color: white;
+        opacity: 0.2;
+        padding: 10px;
+    }
+
+    .value
+    {
+        padding: 10px;
+        width: 200px;
+        text-align: center;
+        color: #4cff00;
+        background-color: rgba( black, 0.5 );
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 10px;
+    }
+}
+}
