@@ -55,6 +55,11 @@ partial class FunkinPlayer : Player
             Boyfriend.SetState(_steamid, (int)BoyfriendState.Idle);
         }
 
+        if(Input.Pressed(InputButton.Reload)){
+            Boyfriend.SetCharacter(_steamid, Rand.FromList(FunkinGame.Characters).id);
+            Boyfriend.SetPosition(_steamid, new Vector2( Rand.Int(200,1920-200), Rand.Int(200, 1080-200)));
+        }
+
         inputUpPress = false;
         inputDownPress = false;
         inputLeftPress = false;

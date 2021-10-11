@@ -8,14 +8,14 @@ public enum BoyfriendState { Idle, Up, Down, Left, Right }
 public partial class Boyfriend : Entity
 {
 
-    public static List<Boyfriend> Characters = new();
+    public static List<Boyfriend> Players = new();
 
     public CharacterBase Character = new CharacterBoyfriend();
     public Base2D Actor;
     public ulong PlayerId;
     public TimeSince AnimationTimer;
 
-    [Net] public new Vector2 Position {get; set;} = new Vector2( Rand.Int(200,1920-200), Rand.Int(200, 1080-200));
+    [Net, Predicted] public new Vector2 Position {get; set;} = new Vector2( Rand.Int(200,1920-200), Rand.Int(200, 1080-200));
     [Net, Predicted] public BoyfriendState State {get; set;} = BoyfriendState.Idle;
 
     public Boyfriend(ulong _steamid, CharacterBase _char)
@@ -28,7 +28,7 @@ public partial class Boyfriend : Entity
         Actor.Position = Position;
         PlayerId = _steamid;
 
-        Characters.Add(this);
+        Players.Add(this);
 
     }
 
@@ -71,10 +71,32 @@ public partial class Boyfriend : Entity
 
     [ClientRpc]
 	public static void SetState(ulong _steamid, int _state){
-		foreach(Boyfriend _char in Characters){
-            if(_char.PlayerId == _steamid){
-                if((int)_char.State != _state) _char.AnimationTimer = 0f;
-                _char.State = (BoyfriendState)_state;
+		foreach(Boyfriend _ply in Players){
+            if(_ply.PlayerId == _steamid){
+                if((int)_ply.State != _state) _ply.AnimationTimer = 0f;
+                _ply.State = (BoyfriendState)_state;
+                return;
+            }
+        }
+        Log.Info("Couldn't find character with SteamID " + _steamid.ToString());
+	}
+
+    [ClientRpc]
+	public static void SetCharacter(ulong _steamid, string _character){
+		foreach(Boyfriend _ply in Players){
+            if(_ply.PlayerId == _steamid){
+                _ply.Character = FunkinGame.GetCharacterFromId(_character);
+                return;
+            }
+        }
+        Log.Info("Couldn't find character with SteamID " + _steamid.ToString());
+	}
+
+    [ClientRpc]
+	public static void SetPosition(ulong _steamid, Vector2 _position){
+		foreach(Boyfriend _ply in Players){
+            if(_ply.PlayerId == _steamid){
+                _ply.Position = _position;
                 return;
             }
         }
