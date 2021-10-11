@@ -7,4 +7,4 @@ build_property.PublishSingleFile =
 build_property.IncludeAllContentForSelfExtract = 
 build_property._SupportedPlatformList = Android,iOS,Linux,macOS,Windows
 build_property.RootNamespace = funkin
-build_property.ProjectDir = E:\SteamLibrary\steamapps\common\sbox\Addons\funkin\code\
+build_property.ProjectDir = e:\SteamLibrary\steamapps\common\sbox\addons\funkin\code\
