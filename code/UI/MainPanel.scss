@@ -22,4 +22,7 @@ GameManager
     width: 400px;
     height: 400px;
     position: absolute;
+    &.pixel{
+        image-rendering: pixelated;
+    }
 }

@@ -26,6 +26,7 @@ public partial class Boyfriend : Entity
         Actor.Sprite = "/sprites/boyfriend/idle_01.png";
         Actor.AddClass( "boyfriend" );
         Actor.Position = Position;
+
         PlayerId = _steamid;
 
         Players.Add(this);
@@ -67,6 +68,9 @@ public partial class Boyfriend : Entity
 
         //Set the position of the actor
         Actor.Position = Position;
+
+        //Set the antialiasing flag
+        Actor.SetClass("pixel", !Character.antialiasing);
     }
 
     [ClientRpc]

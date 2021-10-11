@@ -4,6 +4,8 @@ public class CharacterBase : LibraryAttribute{
     public virtual string id {get;set;} = "boyfriend";
     public virtual string name {get;set;} = "Boyfriend";
     public virtual bool facingRight {get;set;} = false;
+    public virtual bool excludeFromCharacterSelect {get;set;} = false;
+    public virtual bool antialiasing {get;set;} = true;
     
     public virtual int idleFrames {get;set;} = 6;
     public virtual string spriteIdle{ get{ return "/sprites/" + id + "/idle"; } }
