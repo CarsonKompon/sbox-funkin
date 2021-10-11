@@ -30,10 +30,8 @@ public partial class GameManager : Panel
             }
             if(_shouldSpawn){
                 Log.Info("SPAWNING!!!");
-                var _bf = new Boyfriend();
-                _bf.PlayerId = _players.SteamId;
-                _bf.Sprite = "/sprites/boyfriend/idle_01.png";
-                AddChild(_bf);
+                var _bf = new Boyfriend(_players.SteamId, "boyfriend");
+                AddChild(_bf.Actor);
                 Boyfriends.Add(_players.SteamId);
             }
 

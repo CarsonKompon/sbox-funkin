@@ -18,13 +18,13 @@ partial class FunkinPlayer : Player
 {
 
     [Net, Predicted] public bool inputUpPress {get; set;} = false;
-    [Net, Predicted] public bool inputUpRelease {get; set;} = false;
+    [Net, Predicted] public bool inputUpDown {get; set;} = false;
     [Net, Predicted] public bool inputDownPress {get; set;} = false;
-    [Net, Predicted] public bool inputDownRelease {get; set;} = false;
+    [Net, Predicted] public bool inputDownDown {get; set;} = false;
     [Net, Predicted] public bool inputLeftPress {get; set;} = false;
-    [Net, Predicted] public bool inputLeftRelease {get; set;} = false;
+    [Net, Predicted] public bool inputLeftDown {get; set;} = false;
     [Net, Predicted] public bool inputRightPress {get; set;} = false;
-    [Net, Predicted] public bool inputRightRelease {get; set;} = false;
+    [Net, Predicted] public bool inputRightDown {get; set;} = false;
 
 	public override void Respawn()
 	{
@@ -33,7 +33,8 @@ partial class FunkinPlayer : Player
 		Animator = new StandardPlayerAnimator();
 		Camera = new ThirdPersonCamera();
 
-		
+        Sound.FromScreen("roses_inst");
+
 		base.Respawn();
 	}
 
@@ -42,26 +43,21 @@ partial class FunkinPlayer : Player
         
         var _steamid = cl.SteamId;
 
-        if(inputUpPress){
-            Boyfriend.SetImage(_steamid, "/sprites/boyfriend/up_01.png");
-        }
-        if(inputDownPress){
-            Boyfriend.SetImage(_steamid, "/sprites/boyfriend/down_01.png");
-        }
-        if(inputLeftPress){
-            Boyfriend.SetImage(_steamid, "/sprites/boyfriend/left_01.png");
-        }
-        if(inputRightPress){
-            Boyfriend.SetImage(_steamid, "/sprites/boyfriend/right_01.png");
+        if(inputUpDown){
+            Boyfriend.SetState(_steamid, (int)BoyfriendState.Up);
+        }else if(inputDownDown){
+            Boyfriend.SetState(_steamid, (int)BoyfriendState.Down);
+        }else if(inputLeftDown){
+            Boyfriend.SetState(_steamid, (int)BoyfriendState.Left);
+        }else if(inputRightDown){
+            Boyfriend.SetState(_steamid, (int)BoyfriendState.Right);
+        }else{
+            Boyfriend.SetState(_steamid, (int)BoyfriendState.Idle);
         }
 
         inputUpPress = false;
-        inputUpRelease = false;
         inputDownPress = false;
-        inputDownRelease = false;
         inputLeftPress = false;
-        inputLeftRelease = false;
         inputRightPress = false;
-        inputRightRelease = false;
 	}
 }

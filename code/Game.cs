@@ -8,12 +8,34 @@ public partial class FunkinGame : Sandbox.Game
 
     [Net] public static List<Client> CurrentPlayers {get; set;} = new();
 
+    public static List<CharacterBase> Characters = new List<CharacterBase>();
+
     public FunkinGame()
     {
         if(IsServer){
             _ = new MainPanel();
+
         }
+        InitCharacters();
     }
+
+    [Event.Tick]
+    public void Tick()
+    {
+        CurrentPlayers = new();
+        for(var i=0;i<Client.All.Count;i++){
+			CurrentPlayers.Add(Client.All[i]);
+		}
+    }
+
+    [Event.Hotload] //Reload Characters on Hotload (Makes life easier while developing)
+	public static void InitCharacters(){
+		Characters = new();
+		//Load events from attribute
+		foreach(CharacterBase _char in Library.GetAttributes<CharacterBase>()){
+			Characters.Add(_char.Create<CharacterBase>());
+		}
+	}
 
     public override void ClientJoined( Client client )
 	{
@@ -24,15 +46,6 @@ public partial class FunkinGame : Sandbox.Game
 
         //CurrentPlayers.Add(client);
 	}
-
-    [Event.Tick]
-    public void Tick()
-    {
-        CurrentPlayers = new();
-        for(var i=0;i<Client.All.Count;i++){
-			CurrentPlayers.Add(Client.All[i]);
-		}
-    }
 
 	public override void ClientDisconnect( Client cl, NetworkDisconnectionReason reason )
 	{
@@ -51,28 +64,34 @@ public partial class FunkinGame : Sandbox.Game
 
         if( Input.Pressed( InputButton.Forward ) ){
             player.inputUpPress = true;
-        }else if( Input.Released( InputButton.Forward ) ){
-            player.inputUpRelease = true;
         }
+        player.inputUpDown = Input.Down( InputButton.Forward );
 
         if( Input.Pressed( InputButton.Back ) ){
             player.inputDownPress = true;
-        }else if( Input.Released( InputButton.Back ) ){
-            player.inputDownRelease = true;
         }
+        player.inputDownDown = Input.Down( InputButton.Back );
 
         if( Input.Pressed( InputButton.Left ) ){
             player.inputLeftPress = true;
-        }else if( Input.Released( InputButton.Left ) ){
-            player.inputLeftRelease = true;
         }
+        player.inputLeftDown = Input.Down( InputButton.Left );
 
         if( Input.Pressed( InputButton.Right ) ){
             player.inputRightPress = true;
-        }else if( Input.Released( InputButton.Right ) ){
-            player.inputRightRelease = true;
         }
+        player.inputRightDown = Input.Down( InputButton.Right );
 
 	}
+
+    public static CharacterBase GetCharacterFromId( string _id )
+    {
+        foreach(var _char in Characters){
+            if(_char.id == _id){
+                return _char;
+            }
+        }
+        return null;
+    }
 
 }
