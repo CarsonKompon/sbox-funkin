@@ -3,13 +3,14 @@ using Sandbox;
 public class CharacterBase : LibraryAttribute{
     public virtual string id {get;set;} = "boyfriend";
     public virtual string name {get;set;} = "Boyfriend";
+    public virtual bool facingRight {get;set;} = false;
     
     public virtual int idleFrames {get;set;} = 6;
-    public virtual string spriteIdle {get;set;} = "/sprites/boyfriend/idle";
-    public virtual string spriteUp {get;set;} = "/sprites/boyfriend/up";
-    public virtual string spriteDown {get;set;} = "/sprites/boyfriend/down";
-    public virtual string spriteLeft {get;set;} = "/sprites/boyfriend/left";
-    public virtual string spriteRight {get;set;} = "/sprites/boyfriend/right";
+    public virtual string spriteIdle{ get{ return "/sprites/" + id + "/idle"; } }
+    public virtual string spriteUp{ get{ return "/sprites/" + id + "/up"; } }
+    public virtual string spriteDown{ get{ return "/sprites/" + id + "/down"; } }
+    public virtual string spriteLeft{ get{ return "/sprites/" + id + "/left"; } }
+    public virtual string spriteRight{ get{ return "/sprites/" + id + "/right"; } }
 
     public virtual string GetSpriteFromState(BoyfriendState _state){
         if(_state == BoyfriendState.Up) return spriteUp;
