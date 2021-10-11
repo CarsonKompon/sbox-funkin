@@ -30,7 +30,7 @@ public partial class GameManager : Panel
             }
             if(_shouldSpawn){
                 Log.Info("SPAWNING!!!");
-                var _bf = new Boyfriend(_players.SteamId, "boyfriend");
+                var _bf = new Boyfriend(_players.SteamId, Rand.FromList(FunkinGame.Characters));
                 AddChild(_bf.Actor);
                 Boyfriends.Add(_players.SteamId);
             }

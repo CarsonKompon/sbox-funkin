@@ -18,9 +18,9 @@ public partial class Boyfriend : Entity
     [Net] public new Vector2 Position {get; set;} = new Vector2( Rand.Int(200,1920-200), Rand.Int(200, 1080-200));
     [Net, Predicted] public BoyfriendState State {get; set;} = BoyfriendState.Idle;
 
-    public Boyfriend(ulong _steamid, string _charId)
+    public Boyfriend(ulong _steamid, CharacterBase _char)
     {
-        Character = FunkinGame.GetCharacterFromId(_charId);
+        Character = _char;
 
         Actor = new();
         Actor.Sprite = "/sprites/boyfriend/idle_01.png";
