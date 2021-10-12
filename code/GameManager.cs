@@ -73,21 +73,6 @@ public partial class GameManager : Panel
 
 	}
 
-    [ClientRpc]
-    public static void StartGame(ChartBase _chart, ulong _rightId, ulong _leftId){
-        Current.InitPlayer(_rightId, new CharacterBoyfriend(), true);
-        Current.InitPlayer(_leftId, new CharacterSenpaiAngry(), false);
-
-        Current.SongTime = -2f;
-        Current.Chart = _chart;
-        Current.InGame = true;
-        Current.Countdown = 3;
-
-        BPM = _chart.Chart.Song.BPM;
-
-        Current.LoadNotes(_chart);
-    }
-
     public void LoadNotes(ChartBase _chart){
         Notes = new();
         foreach(var _section in _chart.Chart.Song.Sections){

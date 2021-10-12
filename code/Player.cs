@@ -140,4 +140,19 @@ partial class FunkinPlayer : Player
         inputRightPress = false;
 
 	}
+
+    [ClientRpc]
+    public static void StartGame(ChartBase _chart, ulong _rightId, ulong _leftId){
+        GameManager.Current.InitPlayer(_rightId, new CharacterBoyfriend(), true);
+        GameManager.Current.InitPlayer(_leftId, new CharacterSenpaiAngry(), false);
+
+        GameManager.Current.SongTime = -2f;
+        GameManager.Current.Chart = _chart;
+        GameManager.Current.InGame = true;
+        GameManager.Current.Countdown = 3;
+
+        GameManager.BPM = _chart.Chart.Song.BPM;
+
+        GameManager.Current.LoadNotes(_chart);
+    }
 }
