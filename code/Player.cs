@@ -142,7 +142,8 @@ partial class FunkinPlayer : Player
 	}
 
     [ClientRpc]
-    public static void StartGame(ChartBase _chart, ulong _rightId, ulong _leftId){
+    public static void StartGame(string _chartName, ulong _rightId, ulong _leftId){
+        var _chart = FunkinGame.GetChartFromName(_chartName);
         GameManager.Current.InitPlayer(_rightId, new CharacterBoyfriend(), true);
         GameManager.Current.InitPlayer(_leftId, new CharacterSenpaiAngry(), false);
 

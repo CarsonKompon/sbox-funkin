@@ -71,7 +71,7 @@ public partial class FunkinGame : Sandbox.Game
                 if(_lobby.LeftPlayer == 0) {
                     Log.Info(_steamid.ToString() + " JOINED LOBBY");
                     _lobby.LeftPlayer = _steamid;
-                    FunkinPlayer.StartGame(FunkinGame.GetChartFromName("roses"), _lobby.RightPlayer, _lobby.LeftPlayer);
+                    FunkinPlayer.StartGame("roses", _lobby.RightPlayer, _lobby.LeftPlayer);
                     GameManager.gameUI.Show = true;
                     break;
                 }
