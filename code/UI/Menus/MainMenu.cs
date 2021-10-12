@@ -28,6 +28,15 @@ public partial class MainMenu : Panel
         Pos = -1;
     }
 
+    public void buttonMultiplayer( Button _btn ){
+        Sound.FromScreen("menu_confirm");
+        GameManager.menuBackground.SetOpacity(0.0f);
+        
+        Pos = -1;
+
+        FunkinGame.JoinLobby(Local.Client.SteamId);
+    }
+
     public void buttonSettings( Button _btn ){
         Sound.FromScreen("menu_confirm");
         GameManager.menuBackground.SetHue((float)MenuColors.Red);

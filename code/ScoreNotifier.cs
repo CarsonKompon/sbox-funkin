@@ -15,13 +15,13 @@ public partial class ScoreNotifier : Base2D
         LifeTime = 0f;
         Position = new Vector2(1920/2,1080/2);
 		Sprite = _sprite;
-        Speed = -1;
+        Speed = -0.4f;
     }
 
     public override void Tick()
 	{
         Position = new Vector2(Position.x, Position.y+Speed);
-        Speed += 0.025f;
+        Speed += 0.015f;
 
 		base.Tick();
 	}

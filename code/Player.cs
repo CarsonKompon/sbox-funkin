@@ -67,54 +67,58 @@ partial class FunkinPlayer : Player
 
         //Note Hit Detection
         if(GameNote.Notes.Count > 0){
-            var _note = GameManager.NextNote(Boyfriend.GetMustHit(_steamid));
-            if(_note != null){
-                if(Boyfriend.GetMustHit(_steamid) == _note.MustHit){
-                    if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Shit && GameManager.Current.SongTime <= _note.Time+NoteTimings.Shit){
-                        if(Boyfriend.GetPress(_steamid, _note.Direction) <= Time.Delta){
-                            var _timing = NoteTimings.Shit;
-                            if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Sick && GameManager.Current.SongTime <= _note.Time+NoteTimings.Sick){
-                                _timing = NoteTimings.Sick;
-                            }else if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Good && GameManager.Current.SongTime <= _note.Time+NoteTimings.Good){
-                                _timing = NoteTimings.Good;
-                            }else if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Bad && GameManager.Current.SongTime <= _note.Time+NoteTimings.Bad){
-                                _timing = NoteTimings.Bad;
-                            }
-                            var _score = 50;
-                            var _scoreNotif = "/sprites/ui/shit.png";
-                            if(_timing == NoteTimings.Bad){
-                                _score = 100;
-                                _scoreNotif = "/sprites/ui/bad.png";
-                            }
-                            if(_timing == NoteTimings.Good){
-                                _score = 200;
-                                _scoreNotif = "/sprites/ui/good.png";
-                            }
-                            if(_timing == NoteTimings.Sick){
-                                _score = 350;
-                                _scoreNotif = "/sprites/ui/sick.png";
-                            }
-                            var _notif = new ScoreNotifier(_scoreNotif);
-                            _notif.AddClass("notifier");
-                            GameManager.Current.AddChild(_notif);
-                            
-                            Boyfriend.SetState(_steamid, _note.Direction, _score);
-                            Boyfriend.SetPress(_steamid, _note.Direction, 10f);
-                            _note.Actor.Delete();
-                            _note.Delete();
-                            GameManager.Notes.Remove(_note);
-                        }else{
-                            for(var i=0;i<4;i++){
-                                if(i != _note.Direction){
-                                    if(Boyfriend.GetPress(_steamid, i) <= Time.Delta){
-                                        Boyfriend.SetPress(_steamid, i, 10f);
-                                        Boyfriend.BreakCombo(_steamid);
-                                        //_note.Actor.Delete();
-                                        //_note.Delete();
-                                        GameManager.Notes.Remove(_note);
-                                        break;
-                                    }
+            var _notes = GameManager.NextNotes(Boyfriend.GetMustHit(_steamid));
+            foreach(var _note in _notes){
+                if(_note != null){
+                    if(Boyfriend.GetMustHit(_steamid) == _note.MustHit){
+                        if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Shit && GameManager.Current.SongTime <= _note.Time+NoteTimings.Shit){
+                            if(Boyfriend.GetPress(_steamid, _note.Direction) <= Time.Delta){
+                                var _timing = NoteTimings.Shit;
+                                if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Sick && GameManager.Current.SongTime <= _note.Time+NoteTimings.Sick){
+                                    _timing = NoteTimings.Sick;
+                                }else if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Good && GameManager.Current.SongTime <= _note.Time+NoteTimings.Good){
+                                    _timing = NoteTimings.Good;
+                                }else if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Bad && GameManager.Current.SongTime <= _note.Time+NoteTimings.Bad){
+                                    _timing = NoteTimings.Bad;
                                 }
+                                var _score = 50;
+                                var _scoreNotif = "/sprites/ui/shit.png";
+                                if(_timing == NoteTimings.Bad){
+                                    _score = 100;
+                                    _scoreNotif = "/sprites/ui/bad.png";
+                                }
+                                if(_timing == NoteTimings.Good){
+                                    _score = 200;
+                                    _scoreNotif = "/sprites/ui/good.png";
+                                }
+                                if(_timing == NoteTimings.Sick){
+                                    _score = 350;
+                                    _scoreNotif = "/sprites/ui/sick.png";
+                                }
+
+                                //Spawn timing notifier
+                                var _notif = new ScoreNotifier(_scoreNotif);
+                                _notif.AddClass("notifier");
+                                GameManager.Current.AddChild(_notif);
+                                
+                                Boyfriend.SetState(_steamid, _note.Direction, _score);
+                                Boyfriend.SetPress(_steamid, _note.Direction, 10f);
+                                _note.Actor.Delete();
+                                _note.Delete();
+                                GameManager.Notes.Remove(_note);
+                            }else{
+                                // for(var i=0;i<4;i++){
+                                //     if(i != _note.Direction){
+                                //         if(Boyfriend.GetPress(_steamid, i) <= Time.Delta){
+                                //             Boyfriend.SetPress(_steamid, i, 10f);
+                                //             Boyfriend.BreakCombo(_steamid);
+                                //             //_note.Actor.Delete();
+                                //             //_note.Delete();
+                                //             GameManager.Notes.Remove(_note);
+                                //             break;
+                                //         }
+                                //     }
+                                // }
                             }
                         }
                     }

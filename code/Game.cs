@@ -9,6 +9,7 @@ public partial class FunkinGame : Sandbox.Game
 {
 
     [Net] public static List<Client> CurrentPlayers {get; set;} = new();
+    [Net] public static List<Lobby> CurrentLobbies {get; set;} = new();
 
     public static List<CharacterBase> Characters = new List<CharacterBase>();
     public static List<ChartBase> Charts = new List<ChartBase>();
@@ -25,10 +26,10 @@ public partial class FunkinGame : Sandbox.Game
     [Event.Tick]
     public void Tick()
     {
-        // CurrentPlayers = new();
-        // for(var i=0;i<Client.All.Count;i++){
-		// 	CurrentPlayers.Add(Client.All[i]);
-		// }
+        CurrentPlayers = new();
+        for(var i=0;i<Client.All.Count;i++){
+			CurrentPlayers.Add(Client.All[i]);
+		}
     }
 
     [Event.Hotload] //Reload Characters on Hotload (Makes life easier while developing)
@@ -53,6 +54,27 @@ public partial class FunkinGame : Sandbox.Game
             catch (Exception e) { Log.Trace(e); }
         }
 	}
+
+    public static void CreateLobby(ulong _steamid){
+        var _lobby = new Lobby();
+        _lobby.RightPlayer = _steamid;
+        CurrentLobbies.Add(_lobby);
+    }
+
+    public static void JoinLobby(ulong _steamid){
+        if(CurrentLobbies.Count == 0){
+            CreateLobby(_steamid);
+        }else{
+            foreach(var _lobby in CurrentLobbies){
+                if(_lobby.LeftPlayer == 0) {
+                    _lobby.LeftPlayer = _steamid;
+                    GameManager.StartGame(FunkinGame.GetChartFromName("roses"));
+                    GameManager.gameUI.Show = true;
+                    break;
+                }
+            }
+        }
+    }
 
     public override void ClientJoined( Client client )
 	{

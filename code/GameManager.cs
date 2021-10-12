@@ -105,15 +105,11 @@ public partial class GameManager : Panel
         }
     }
 
-    public static GameNote NextNote(bool _mustHit){
-        GameNote _toReturn = null;
-        var _val = 9999.0f;
+    public static List<GameNote> NextNotes(bool _mustHit){
+        List<GameNote> _toReturn = new();
         foreach(var _note in Notes){
-            if(_note.Time > Current.SongTime - NoteTimings.Shit && _note.MustHit == _mustHit){
-                if(_note.Time < _val){
-                    _val = _note.Time;
-                    _toReturn = _note;
-                }
+            if(_note.Time > Current.SongTime - NoteTimings.Shit && _note.Time < Current.SongTime + NoteTimings.Shit && _note.MustHit == _mustHit){
+                _toReturn.Add(_note);
             }
         }
         return _toReturn;
