@@ -147,6 +147,8 @@ partial class FunkinPlayer : Player
         GameManager.Current.InitPlayer(_rightId, new CharacterBoyfriend(), true);
         GameManager.Current.InitPlayer(_leftId, new CharacterSenpaiAngry(), false);
 
+        GameManager.gameUI.Show = true;
+
         GameManager.Current.SongTime = -2f;
         GameManager.Current.Chart = _chart;
         GameManager.Current.InGame = true;
