@@ -8,7 +8,7 @@ public partial class MainMenu : Panel
 
     public Panel RootBody { get; set; }
 
-    public bool Show = true;
+    public int Pos = 0;
 
     public MainMenu()
     {
@@ -17,24 +17,29 @@ public partial class MainMenu : Panel
 
     public override void Tick()
     {
-        RootBody.SetClass( "hide", !Show);
+        RootBody.SetClass( "hideLeft", Pos == -1);
+        RootBody.SetClass( "hideRight", Pos == 1);
     }
 
     public void buttonSingleplayer( Button _btn ){
-        if(Show){
-            Sound.FromScreen("menu_confirm");
-            GameManager.songSelect.Show = true;
-            Show = false;
-        }
+        Sound.FromScreen("menu_confirm");
+        GameManager.menuBackground.SetHue((float)MenuColors.Blue);
+        GameManager.songSelect.Pos = 0;
+        Pos = -1;
+    }
+
+    public void buttonSettings( Button _btn ){
+        Sound.FromScreen("menu_confirm");
+        GameManager.menuBackground.SetHue((float)MenuColors.Red);
+        GameManager.settingsMenu.Pos = 0;
+        Pos = 1;
     }
 
     public void buttonHover( Button _btn ){
-        if(Show){
-            if(_btn.HasHovered){
-                Sound.FromScreen("menu_hover");
-                GameManager.menuBackground.SetPos(0);
-            }
+        if(_btn.HasHovered){
+            Sound.FromScreen("menu_hover");
+            GameManager.menuBackground.Position = new Vector2(GameManager.menuBackground.Position.x, (Mouse.Position.y/Screen.Height)*-270);
         }
     }
-   
+
 }

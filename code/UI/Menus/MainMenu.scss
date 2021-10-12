@@ -7,11 +7,20 @@
     top: 0px;
     transition: all 1s ease-out;
 
-    &.hide
+    &.hideLeft
     {
         width: 0px;
         height: 0px;
         left: -1920px;
+        top: 540px;
+        pointer-events: none;
+    }
+
+    &.hideRight
+    {
+        width: 0px;
+        height: 0px;
+        left: 2880px;
         top: 540px;
         pointer-events: none;
     }
@@ -37,8 +46,9 @@
 .logo
 {
     background-image: url("/sprites/logo.png");
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     position: absolute;
     width: 900px;
     height: 400px;
@@ -69,34 +79,4 @@ button
 .column
 {
 flex-direction: column;
-
-.row
-{
-    background-color: rgba( #444, 0.1 );
-    padding: 4px;
-    margin-bottom: 2px;
-    border-radius: 4px;
-    flex-direction: row;
-
-    .label
-    {
-        width: 200px;
-        text-align: left;
-        color: white;
-        opacity: 0.2;
-        padding: 10px;
-    }
-
-    .value
-    {
-        padding: 10px;
-        width: 200px;
-        text-align: center;
-        color: #4cff00;
-        background-color: rgba( black, 0.5 );
-        border-radius: 4px;
-        font-family: monospace;
-        font-size: 10px;
-    }
-}
 }

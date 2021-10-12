@@ -3,31 +3,35 @@ using System.Xml.Schema;
 using Sandbox;
 using System.Collections.Generic;
 
-public enum BoyfriendState { Idle, Up, Down, Left, Right }
+public enum BoyfriendState { Left, Down, Up, Right, Idle }
 
 public partial class Boyfriend : Entity
 {
 
     public static List<Boyfriend> Players = new();
 
+    public bool MustHit = false;
     public CharacterBase Character = new CharacterBoyfriend();
     public Base2D Actor;
     public ulong PlayerId;
     public TimeSince AnimationTimer;
+    public TimeSince StateTimer;
+    public TimeSince[] Press = new TimeSince[4];
 
-    [Net, Predicted] public new Vector2 Position {get; set;} = new Vector2( Rand.Int(200,1920-200), Rand.Int(200, 1080-200));
+    [Net, Predicted] public new Vector2 Position {get; set;} = Vector2.Zero;
     [Net, Predicted] public BoyfriendState State {get; set;} = BoyfriendState.Idle;
 
-    public Boyfriend(ulong _steamid, CharacterBase _char)
+    public Boyfriend(ulong _steamid, CharacterBase _char, Vector2 _position, bool _mustHit)
     {
+        PlayerId = _steamid;
         Character = _char;
+        Position = _position;
+        MustHit = _mustHit;
 
         Actor = new();
         Actor.Sprite = "/sprites/boyfriend/idle_01.png";
         Actor.AddClass( "boyfriend" );
         Actor.Position = Position;
-
-        PlayerId = _steamid;
 
         Players.Add(this);
 
@@ -38,19 +42,19 @@ public partial class Boyfriend : Entity
     {
         if(!IsClient) return;
 
-        //Destroy character if they no longer exist
-        var _toDestroy = true;
-        foreach(var _cl in FunkinGame.CurrentPlayers){
-            if(_cl.SteamId == PlayerId){
-                _toDestroy = false;
-                break;
-            }
-        }
-        if(_toDestroy){
-            Actor.Delete();
-            Delete();
-            return;
-        }
+        // //Destroy character if they no longer exist
+        // var _toDestroy = true;
+        // foreach(var _cl in FunkinGame.CurrentPlayers){
+        //     if(_cl.SteamId == PlayerId){
+        //         _toDestroy = false;
+        //         break;
+        //     }
+        // }
+        // if(_toDestroy){
+        //     Actor.Delete();
+        //     Delete();
+        //     return;
+        // }
 
         //Set sprite based on state and animation timer
         var _sprite = Character.GetSpriteFromState(State);
@@ -58,7 +62,15 @@ public partial class Boyfriend : Entity
         var _maxFrames = 2;
         var _frameTime = 0.12f;
         var _animTime = AnimationTimer;
-        if(State == BoyfriendState.Idle) _maxFrames = Character.idleFrames;
+
+        if(State == BoyfriendState.Idle){
+            _maxFrames = Character.idleFrames;
+            _frameTime = (60/GameManager.BPM)/_maxFrames;
+        }else{
+            if(StateTimer > 60/GameManager.BPM/2){
+                State = BoyfriendState.Idle;
+            }
+        }
         while(_animTime >= _frameTime){
             _currentFrame++;
             if(_currentFrame > _maxFrames) _currentFrame -= _maxFrames;
@@ -71,7 +83,7 @@ public partial class Boyfriend : Entity
 
         //Flip the Actor if facing right
         Actor.SetClass("flip", Character.facingRight);
-
+        
         //Set the antialiasing flag
         //Actor.SetClass("pixel", !Character.antialiasing);
     }
@@ -82,10 +94,38 @@ public partial class Boyfriend : Entity
             if(_ply.PlayerId == _steamid){
                 if((int)_ply.State != _state) _ply.AnimationTimer = 0f;
                 _ply.State = (BoyfriendState)_state;
+                _ply.StateTimer = 0f;
                 return;
             }
         }
-        Log.Info("Couldn't find character with SteamID " + _steamid.ToString());
+	}
+
+    [ClientRpc]
+	public static void SetPress(ulong _steamid, int _press){
+		foreach(Boyfriend _ply in Players){
+            if(_ply.PlayerId == _steamid){
+                _ply.Press[_press] = 0f;
+                return;
+            }
+        }
+	}
+
+	public static TimeSince GetPress(ulong _steamid, int _press){
+		foreach(Boyfriend _ply in Players){
+            if(_ply.PlayerId == _steamid){
+                return _ply.Press[_press];
+            }
+        }
+        return -1f;
+	}
+
+    public static bool GetMustHit(ulong _steamid){
+		foreach(Boyfriend _ply in Players){
+            if(_ply.PlayerId == _steamid){
+                return _ply.MustHit;
+            }
+        }
+        return false;
 	}
 
     [ClientRpc]
@@ -96,7 +136,6 @@ public partial class Boyfriend : Entity
                 return;
             }
         }
-        Log.Info("Couldn't find character with SteamID " + _steamid.ToString());
 	}
 
     [ClientRpc]
@@ -107,6 +146,5 @@ public partial class Boyfriend : Entity
                 return;
             }
         }
-        Log.Info("Couldn't find character with SteamID " + _steamid.ToString());
 	}
 }

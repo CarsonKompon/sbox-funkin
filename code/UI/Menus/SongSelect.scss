@@ -7,7 +7,16 @@
     top: 0px;
     transition: all 1s ease-out;
 
-    &.hide
+    &.hideLeft
+    {
+        width: 0px;
+        height: 0px;
+        left: -960px;
+        top: 540px;
+        pointer-events: none;
+    }
+
+    &.hideRight
     {
         width: 0px;
         height: 0px;
@@ -31,20 +40,6 @@
 
 }
 
-.logo
-{
-    background-image: url("/sprites/logo.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    position: absolute;
-    width: 900px;
-    height: 400px;
-    left: 510px;
-    top: 20px;
-    z-index: 100;
-    overflow: hidden;
-}
-
 button
 {
     color: black;
@@ -66,34 +61,4 @@ button
 .column
 {
 flex-direction: column;
-
-.row
-{
-    background-color: rgba( #444, 0.1 );
-    padding: 4px;
-    margin-bottom: 2px;
-    border-radius: 4px;
-    flex-direction: row;
-
-    .label
-    {
-        width: 200px;
-        text-align: left;
-        color: white;
-        opacity: 0.2;
-        padding: 10px;
-    }
-
-    .value
-    {
-        padding: 10px;
-        width: 200px;
-        text-align: center;
-        color: #4cff00;
-        background-color: rgba( black, 0.5 );
-        border-radius: 4px;
-        font-family: monospace;
-        font-size: 10px;
-    }
-}
 }

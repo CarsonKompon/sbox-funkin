@@ -1,0 +1,66 @@
+.root
+{  
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    transition: all 1s ease-out;
+
+    &.hideLeft
+    {
+        width: 0px;
+        height: 0px;
+        left: -1920px;
+        top: 540px;
+        pointer-events: none;
+    }
+
+    &.hideRight
+    {
+        width: 0px;
+        height: 0px;
+        left: 1920px;
+        top: 540px;
+        pointer-events: none;
+    }
+
+
+}
+
+.menu
+{
+    width: 60%;
+    height: 100%; 
+    align-self: center;
+    left: 480px;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    transition: all 0.1s ease-in;
+    overflow: hidden;
+
+}
+
+button
+{
+    color: black;
+    font-family: Friday_Funkin;
+    font-size: 92px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.05s ease-in;
+    transform: scale( 1 );
+    z-index: 1000;
+
+    &:hover
+    {
+        transform: scale( 1.1 );
+    }
+}
+
+.column
+{
+flex-direction: column;
+}

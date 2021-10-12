@@ -25,10 +25,10 @@ public partial class FunkinGame : Sandbox.Game
     [Event.Tick]
     public void Tick()
     {
-        CurrentPlayers = new();
-        for(var i=0;i<Client.All.Count;i++){
-			CurrentPlayers.Add(Client.All[i]);
-		}
+        // CurrentPlayers = new();
+        // for(var i=0;i<Client.All.Count;i++){
+		// 	CurrentPlayers.Add(Client.All[i]);
+		// }
     }
 
     [Event.Hotload] //Reload Characters on Hotload (Makes life easier while developing)
@@ -44,11 +44,11 @@ public partial class FunkinGame : Sandbox.Game
             var _new = _chart.Create<ChartBase>();
             try
             {
-                var _json = FileSystem.Data.ReadJson<ChartFile>(_new.jsonFile);
+                var _json = FileSystem.Mounted.ReadJson<ChartFile>(_new.jsonFile);
 
                 _new.Chart = _json;
 
-                Log.Info(_new.Chart.Song.Name);
+                Log.Info(JsonSerializer.Serialize(_json));
 
                 Charts.Add(_new);
             }
@@ -79,27 +79,30 @@ public partial class FunkinGame : Sandbox.Game
 
         //Log.Info(FunkinGame.CurrentPlayers.Count);
 
-        var player = cl.Pawn as FunkinPlayer;
+        if(cl.Pawn is FunkinPlayer){
 
-        if( Input.Pressed( InputButton.Forward ) ){
-            player.inputUpPress = true;
-        }
-        player.inputUpDown = Input.Down( InputButton.Forward );
+            var player = cl.Pawn as FunkinPlayer;
+            
+            if( Input.Pressed( InputButton.Forward ) ){
+                player.inputUpPress = true;
+            }
+            player.inputUpDown = Input.Down( InputButton.Forward );
 
-        if( Input.Pressed( InputButton.Back ) ){
-            player.inputDownPress = true;
-        }
-        player.inputDownDown = Input.Down( InputButton.Back );
+            if( Input.Pressed( InputButton.Back ) ){
+                player.inputDownPress = true;
+            }
+            player.inputDownDown = Input.Down( InputButton.Back );
 
-        if( Input.Pressed( InputButton.Left ) ){
-            player.inputLeftPress = true;
-        }
-        player.inputLeftDown = Input.Down( InputButton.Left );
+            if( Input.Pressed( InputButton.Left ) ){
+                player.inputLeftPress = true;
+            }
+            player.inputLeftDown = Input.Down( InputButton.Left );
 
-        if( Input.Pressed( InputButton.Right ) ){
-            player.inputRightPress = true;
+            if( Input.Pressed( InputButton.Right ) ){
+                player.inputRightPress = true;
+            }
+            player.inputRightDown = Input.Down( InputButton.Right );
         }
-        player.inputRightDown = Input.Down( InputButton.Right );
 
 	}
 
@@ -108,6 +111,16 @@ public partial class FunkinGame : Sandbox.Game
         foreach(var _char in Characters){
             if(_char.id == _id){
                 return _char;
+            }
+        }
+        return null;
+    }
+
+    public static ChartBase GetChartFromName( string _name )
+    {
+        foreach(var _chart in Charts){
+            if(_chart.name.ToLower() == _name.ToLower()){
+                return _chart;
             }
         }
         return null;

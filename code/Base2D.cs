@@ -7,7 +7,7 @@ using System;
 public partial class Base2D : Panel
 {
 
-    public Vector2 Position = Vector2.Zero;
+    public Vector2 Position {get; set;} = Vector2.Zero;
     public string Sprite {get; set;}
 
     public Base2D()

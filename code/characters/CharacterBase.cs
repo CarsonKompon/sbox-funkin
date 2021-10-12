@@ -12,13 +12,13 @@ public class CharacterBase : LibraryAttribute{
     public virtual string spriteUp{ get{ return "/sprites/characters/" + id + "/up"; } }
     public virtual string spriteDown{ get{ return "/sprites/characters/" + id + "/down"; } }
     public virtual string spriteLeft{ get{
-        if(facingRight) return "/sprites/characters/" + id + "/right";
-        else return "/sprites/characters/" + id + "/left";
+        /*if(facingRight) return "/sprites/characters/" + id + "/right";
+        else*/ return "/sprites/characters/" + id + "/left";
         }
     }
     public virtual string spriteRight{ get{
-        if(facingRight) return "/sprites/characters/" + id + "/left";
-        else return "/sprites/characters/" + id + "/right";
+        /*if(facingRight) return "/sprites/characters/" + id + "/left";
+        else*/ return "/sprites/characters/" + id + "/right";
         }
     }
 

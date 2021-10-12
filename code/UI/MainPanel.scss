@@ -20,16 +20,36 @@ GameManager
 .boyfriend{
     
 	//background-image: url("/sprites/boyfriend/idle_01.png");
-    background-size: contain;
+    background-size: 401px;
     background-repeat: no-repeat;
+    background-position: center;
     width: 400px;
     height: 400px;
     position: absolute;
-    transform: scaleX(1);
-    // &.pixel{
-    //     image-rendering: pixelated;
-    // }
-    &.flip{
-        transform: scaleX(2);
-    }
+    z-index: -20;
+    overflow: visible;
+}
+
+.arrow{
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 162px;
+    height: 162px;
+    position: absolute;
+    z-index: -18;
+    overflow: visible;
+    transition: top 0.01666s linear;
+    transition: left 0.01666s linear;
+}
+
+.receptor{
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 162px;
+    height: 162px;
+    position: absolute;
+    z-index: -19;
+    overflow: visible;
 }
