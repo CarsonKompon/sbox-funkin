@@ -24,7 +24,7 @@ public partial class GameManager : Panel
     public bool InGame = false;
     public int Countdown = 3;
     public ChartBase Chart;
-    public TimeSince SongTime;
+    public RealTimeSince SongTime;
 
     public GameManager()
     {
@@ -44,6 +44,9 @@ public partial class GameManager : Panel
         if(InGame)
         {
             
+            // if(Time.Delta > 1.0f/60.0f){
+            //     SongTime += Time.Delta - (1.0f/60.0f);
+            // }
             if(Countdown > -1){
                 var _snd = Countdown.ToString();
                 if(Countdown == 0) _snd = "go";
@@ -60,10 +63,6 @@ public partial class GameManager : Panel
                     }
 
                     Countdown--;
-                }
-
-                foreach(var _note in Notes){
-                    
                 }
             }
 
@@ -89,13 +88,32 @@ public partial class GameManager : Panel
         Notes = new();
         foreach(var _section in _chart.Chart.Song.Sections){
             foreach(var _note in _section.Notes){
-                var _time = StepsToTime(_note[0]);
-                var _direction = _note[1];
-                var _length = _note[2];
-                var _gameNote = new GameNote(_time, _direction, _length, _section.MustHitSection);
+                var _time = StepsToTime(_note[0].ToString().ToFloat());
+                var _direction = _note[1].ToString().ToFloat();
+                var _length = _note[2].ToString().ToFloat();
+                var _mustHit = _section.MustHitSection;
+                if(_direction > 3){
+                    _direction -= 3;
+                    _mustHit = !_mustHit;
+                }
+                var _gameNote = new GameNote(_time, _direction, _length, _mustHit);
                 Notes.Add(_gameNote);
             }
         }
+    }
+
+    public static GameNote NextNote(bool _mustHit){
+        GameNote _toReturn = null;
+        var _val = 9999.0f;
+        foreach(var _note in Notes){
+            if(_note.Time > Current.SongTime - NoteTimings.Shit && _note.MustHit == _mustHit){
+                if(_note.Time < _val){
+                    _val = _note.Time;
+                    _toReturn = _note;
+                }
+            }
+        }
+        return _toReturn;
     }
 
     //Used to convert funkin steps format to time in seconds

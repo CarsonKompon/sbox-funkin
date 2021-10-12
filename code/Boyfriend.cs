@@ -17,7 +17,11 @@ public partial class Boyfriend : Entity
     public TimeSince AnimationTimer;
     public TimeSince StateTimer;
     public TimeSince[] Press = new TimeSince[4];
+    public Vector2 Offset = Vector2.Zero;
 
+    [Net, Predicted] public int Combo {get;set;} = 0;
+    [Net, Predicted] public int ComboBreaks {get;set;} = 0;
+    [Net, Predicted] public int Score {get;set;} = 0;
     [Net, Predicted] public new Vector2 Position {get; set;} = Vector2.Zero;
     [Net, Predicted] public BoyfriendState State {get; set;} = BoyfriendState.Idle;
 
@@ -30,7 +34,8 @@ public partial class Boyfriend : Entity
 
         Actor = new();
         Actor.Sprite = "/sprites/boyfriend/idle_01.png";
-        Actor.AddClass( "boyfriend" );
+        Actor.AddClass( _char.id );
+        Offset = new Vector2(Actor.Style.Left.ToString().ToInt(), Actor.Style.Top.ToString().ToInt());
         Actor.Position = Position;
 
         Players.Add(this);
@@ -73,7 +78,8 @@ public partial class Boyfriend : Entity
         }
         while(_animTime >= _frameTime){
             _currentFrame++;
-            if(_currentFrame > _maxFrames) _currentFrame -= _maxFrames;
+            // if(_currentFrame > _maxFrames) _currentFrame -= _maxFrames;
+            if(_currentFrame > _maxFrames) _currentFrame = _maxFrames;
             _animTime -= _frameTime;
         }
         Actor.Sprite = _sprite + "_" + String.Format("{0:00}", _currentFrame) + ".png";
@@ -95,16 +101,28 @@ public partial class Boyfriend : Entity
                 if((int)_ply.State != _state) _ply.AnimationTimer = 0f;
                 _ply.State = (BoyfriendState)_state;
                 _ply.StateTimer = 0f;
+                _ply.Combo++;
                 return;
             }
         }
 	}
 
     [ClientRpc]
-	public static void SetPress(ulong _steamid, int _press){
+	public static void BreakCombo(ulong _steamid){
 		foreach(Boyfriend _ply in Players){
             if(_ply.PlayerId == _steamid){
-                _ply.Press[_press] = 0f;
+                _ply.Combo = 0;
+                _ply.ComboBreaks++;
+                return;
+            }
+        }
+	}
+
+    [ClientRpc]
+	public static void SetPress(ulong _steamid, int _press, float _val = 0f){
+		foreach(Boyfriend _ply in Players){
+            if(_ply.PlayerId == _steamid){
+                _ply.Press[_press] = _val;
                 return;
             }
         }

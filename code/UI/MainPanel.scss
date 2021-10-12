@@ -30,6 +30,19 @@ GameManager
     overflow: visible;
 }
 
+.senpai_angry{
+    
+	//background-image: url("/sprites/boyfriend/idle_01.png");
+    background-size: 401px 601px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 400px;
+    height: 600px;
+    position: absolute;
+    z-index: -20;
+    overflow: visible;
+}
+
 .arrow{
     background-size: cover;
     background-repeat: no-repeat;

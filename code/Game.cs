@@ -48,8 +48,6 @@ public partial class FunkinGame : Sandbox.Game
 
                 _new.Chart = _json;
 
-                Log.Info(JsonSerializer.Serialize(_json));
-
                 Charts.Add(_new);
             }
             catch (Exception e) { Log.Trace(e); }

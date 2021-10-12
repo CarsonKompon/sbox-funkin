@@ -19,6 +19,6 @@ public class Section
 	/// This is an array of Note objects for the chart
 	/// </summary>
 	[JsonPropertyName("sectionNotes")]
-	public List<List<float>> Notes { get; set; }
+	public List<List<object>> Notes { get; set; }
 
 }

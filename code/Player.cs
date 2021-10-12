@@ -1,3 +1,4 @@
+using System.IO;
 using Sandbox;
 
 
@@ -57,15 +58,42 @@ partial class FunkinPlayer : Player
             Boyfriend.SetPress(_steamid, (int)BoyfriendState.Right);
         }
 
-        foreach(var _note in GameNote.Notes){
-            if(Boyfriend.GetMustHit(_steamid) == _note.MustHit){
-                if(GameManager.Current.SongTime >= _note.Time-0.18f && GameManager.Current.SongTime <= _note.Time+0.18f){
-                    if(Boyfriend.GetPress(_steamid, _note.Direction) <= Time.Delta){
-                        Boyfriend.SetState(_steamid, _note.Direction);
+        Receptor.SetPress(_steamid, 0, inputLeftDown);
+        Receptor.SetPress(_steamid, 1, inputDownDown);
+        Receptor.SetPress(_steamid, 2, inputUpDown);
+        Receptor.SetPress(_steamid, 3, inputRightDown);
+
+        //Note Hit Detection
+        if(GameNote.Notes.Count > 0){
+            var _note = GameManager.NextNote(Boyfriend.GetMustHit(_steamid));
+            if(_note != null){
+                if(Boyfriend.GetMustHit(_steamid) == _note.MustHit){
+                    if(GameManager.Current.SongTime >= _note.Time-0.18f && GameManager.Current.SongTime <= _note.Time+0.18f){
+                        if(Boyfriend.GetPress(_steamid, _note.Direction) <= Time.Delta){
+                            Boyfriend.SetState(_steamid, _note.Direction);
+                            Boyfriend.SetPress(_steamid, _note.Direction, 10f);
+                            _note.Actor.Delete();
+                            _note.Delete();
+                            GameManager.Notes.Remove(_note);
+                        }else{
+                            for(var i=0;i<4;i++){
+                                if(i != _note.Direction){
+                                    if(Boyfriend.GetPress(_steamid, i) <= Time.Delta){
+                                        Boyfriend.SetPress(_steamid, i, 10f);
+                                        Boyfriend.BreakCombo(_steamid);
+                                        _note.Actor.Delete();
+                                        _note.Delete();
+                                        GameManager.Notes.Remove(_note);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+        
 
         if(Input.Pressed(InputButton.Reload)){
             if( IsServer ){

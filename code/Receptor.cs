@@ -8,6 +8,7 @@ public partial class Receptor : Entity
 
     public static List<Receptor> Receptors = new();
 
+    public bool Pressed = false;
     public bool MustHit = false;
     public int Direction = 0;
     public Base2D Actor;
@@ -40,7 +41,8 @@ public partial class Receptor : Entity
         else if(Direction == 2) _arrow = "up";
         else if(Direction == 3) _arrow = "right";
 
-        Actor.Sprite = "/sprites/arrows/" + _arrow + "_unpressed.png";
+        if(Pressed) Actor.Sprite = "/sprites/arrows/" + _arrow + "_pressed.png";
+        else Actor.Sprite = "/sprites/arrows/" + _arrow + "_unpressed.png";
 
 
         // //Destroy receptor if they no longer exist
@@ -83,34 +85,13 @@ public partial class Receptor : Entity
         // //Actor.SetClass("pixel", !Character.antialiasing);
     }
 
-    // [ClientRpc]
-	// public static void SetState(ulong _steamid, int _state){
-	// 	foreach(Boyfriend _ply in Players){
-    //         if(_ply.PlayerId == _steamid){
-    //             if((int)_ply.State != _state) _ply.AnimationTimer = 0f;
-    //             _ply.State = (BoyfriendState)_state;
-    //             return;
-    //         }
-    //     }
-	// }
-
-    // [ClientRpc]
-	// public static void SetCharacter(ulong _steamid, string _character){
-	// 	foreach(Boyfriend _ply in Players){
-    //         if(_ply.PlayerId == _steamid){
-    //             _ply.Character = FunkinGame.GetCharacterFromId(_character);
-    //             return;
-    //         }
-    //     }
-	// }
-
-    // [ClientRpc]
-	// public static void SetPosition(ulong _steamid, Vector2 _position){
-	// 	foreach(Boyfriend _ply in Players){
-    //         if(_ply.PlayerId == _steamid){
-    //             _ply.Position = _position;
-    //             return;
-    //         }
-    //     }
-	// }
+    [ClientRpc]
+	public static void SetPress(ulong _steamid, int _direction, bool _press){
+		foreach(Receptor _rec in Receptors){
+            if(_rec.PlayerId == _steamid && _rec.Direction == _direction){
+                _rec.Pressed = _press;
+                return;
+            }
+        }
+	}
 }

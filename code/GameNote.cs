@@ -1,9 +1,15 @@
 using Sandbox;
 using System.Collections.Generic;
 
+public static class NoteTimings {
+    public const float Shit = 0.162f;
+    public const float Bad = 0.135f;
+    public const float Good = 0.092f;
+    public const float Sick = 0.033f;
+}
+
 public partial class GameNote : Entity
 {
-
     public static List<GameNote> Notes = new();
 
     public float Time;
@@ -11,6 +17,7 @@ public partial class GameNote : Entity
     public float Length;
     public bool MustHit;
 
+    public bool Missed = false;
     public bool IsBot = false;
     public bool ActorPassed = false;
     public bool HasActor = false;
@@ -53,9 +60,23 @@ public partial class GameNote : Entity
         if(!ActorPassed && GameManager.Current.SongTime >= Time){
             if(IsBot){
                 Boyfriend.SetState(0, Direction);
+                ActorPassed = true;
+                GameNote.Notes.Remove(this);
+                Actor.Delete();
+                Delete();
+            }else{
+                if(!Missed && GameManager.Current.SongTime > Time+NoteTimings.Shit){
+                    Boyfriend.BreakCombo(Local.Client.SteamId);
+                    GameNote.Notes.Remove(this);
+                    Missed = true;
+                }
+                if(GameManager.Current.SongTime >= Time+0.5f){
+                    ActorPassed = true;
+                    Actor.Delete();
+                    Delete();
+                    GameNote.Notes.Remove(this);
+                }
             }
-            ActorPassed = true;
-            Actor.Delete();
         }
 
         
