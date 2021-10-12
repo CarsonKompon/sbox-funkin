@@ -54,18 +54,22 @@ public partial class FunkinGame : Sandbox.Game
         }
 	}
 
+    [ServerCmd]
     public static void CreateLobby(ulong _steamid){
+        Log.Info(_steamid.ToString() + " CREATED LOBBY");
         var _lobby = new Lobby();
         _lobby.RightPlayer = _steamid;
         CurrentLobbies.Add(_lobby);
     }
 
+    [ServerCmd]
     public static void JoinLobby(ulong _steamid){
         if(CurrentLobbies.Count == 0){
             CreateLobby(_steamid);
         }else{
             foreach(var _lobby in CurrentLobbies){
                 if(_lobby.LeftPlayer == 0) {
+                    Log.Info(_steamid.ToString() + " JOINED LOBBY");
                     _lobby.LeftPlayer = _steamid;
                     FunkinPlayer.StartGame(FunkinGame.GetChartFromName("roses"), _lobby.RightPlayer, _lobby.LeftPlayer);
                     GameManager.gameUI.Show = true;
