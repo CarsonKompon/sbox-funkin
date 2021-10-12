@@ -19,7 +19,7 @@ GameManager
 
  /// Characters Start \\\
 
-.boyfriend{
+ .boyfriend{
     
 	//background-image: url("/sprites/boyfriend/idle_01.png");
     background-size: 402px;
@@ -71,4 +71,17 @@ GameManager
     overflow: visible;
     transition: top 0.01666s linear;
     transition: left 0.01666s linear;
+}
+
+.notifier{
+    
+	//background-image: url("/sprites/boyfriend/idle_01.png");
+    background-size: 202px 127px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 200px;
+    height: 125px;
+    position: absolute;
+    z-index: -19;
+    overflow: visible;
 }

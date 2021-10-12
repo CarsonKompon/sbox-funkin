@@ -81,9 +81,23 @@ partial class FunkinPlayer : Player
                                 _timing = NoteTimings.Bad;
                             }
                             var _score = 50;
-                            if(_timing == NoteTimings.Bad) _score = 100;
-                            if(_timing == NoteTimings.Good) _score = 200;
-                            if(_timing == NoteTimings.Sick) _score = 350;
+                            var _scoreNotif = "/sprites/ui/shit.png";
+                            if(_timing == NoteTimings.Bad){
+                                _score = 100;
+                                _scoreNotif = "/sprites/ui/bad.png";
+                            }
+                            if(_timing == NoteTimings.Good){
+                                _score = 200;
+                                _scoreNotif = "/sprites/ui/good.png";
+                            }
+                            if(_timing == NoteTimings.Sick){
+                                _score = 350;
+                                _scoreNotif = "/sprites/ui/sick.png";
+                            }
+                            var _notif = new ScoreNotifier(_scoreNotif);
+                            _notif.AddClass("notifier");
+                            GameManager.Current.AddChild(_notif);
+                            
                             Boyfriend.SetState(_steamid, _note.Direction, _score);
                             Boyfriend.SetPress(_steamid, _note.Direction, 10f);
                             _note.Actor.Delete();
