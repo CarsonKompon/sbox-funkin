@@ -53,6 +53,7 @@ public partial class SongSelect : Panel
         Pos = -1;
 
         GameManager.StartGame(FunkinGame.GetChartFromName(_btn.Text));
+        GameManager.gameUI.Show = true;
     }
 
     public void buttonBack( Button _btn ){

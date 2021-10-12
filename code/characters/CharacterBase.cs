@@ -6,6 +6,8 @@ public class CharacterBase : LibraryAttribute{
     public virtual bool facingRight {get;set;} = false;
     public virtual bool excludeFromCharacterSelect {get;set;} = false;
     public virtual bool antialiasing {get;set;} = true;
+
+    public virtual Vector2 origin {get;set;} = new Vector2(200,400);
     
     public virtual int idleFrames {get;set;} = 6;
     public virtual string spriteIdle{ get{ return "/sprites/characters/" + id + "/idle"; } }

@@ -17,10 +17,12 @@ GameManager
 }
 
 
+ /// Characters Start \\\
+
 .boyfriend{
     
 	//background-image: url("/sprites/boyfriend/idle_01.png");
-    background-size: 401px;
+    background-size: 402px;
     background-repeat: no-repeat;
     background-position: center;
     width: 400px;
@@ -33,7 +35,7 @@ GameManager
 .senpai_angry{
     
 	//background-image: url("/sprites/boyfriend/idle_01.png");
-    background-size: 401px 601px;
+    background-size: 402px 601px;
     background-repeat: no-repeat;
     background-position: center;
     width: 400px;
@@ -42,6 +44,8 @@ GameManager
     z-index: -20;
     overflow: visible;
 }
+
+/// Characters End \\\
 
 .arrow{
     background-size: cover;
@@ -65,4 +69,6 @@ GameManager
     position: absolute;
     z-index: -19;
     overflow: visible;
+    transition: top 0.01666s linear;
+    transition: left 0.01666s linear;
 }

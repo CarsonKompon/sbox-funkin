@@ -20,6 +20,8 @@ public class CharacterSenpaiAngry : CharacterBase
         name = "Senpai Angry";
         antialiasing = false;
 
+        origin = new Vector2(200,600);
+
         idleFrames = 5;
     }
 }

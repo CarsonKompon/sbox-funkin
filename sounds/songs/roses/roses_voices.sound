@@ -4,7 +4,7 @@
 	{
 		sounds = 
 		[
-			"sounds/songs/roses_voices.vsnd",
+			"sounds/songs/roses/roses_voices.vsnd",
 		]
 		UI = true
 		Volume = 1.0

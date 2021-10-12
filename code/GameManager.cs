@@ -16,6 +16,8 @@ public partial class GameManager : Panel
     public static MainMenu mainMenu = new();
     public static SongSelect songSelect = new();
     public static SettingsMenu settingsMenu = new();
+    
+    public static GameUI gameUI = new();
 
     public static List<GameNote> Notes = new();
 
@@ -35,6 +37,7 @@ public partial class GameManager : Panel
         AddChild(mainMenu);
         AddChild(songSelect);
         AddChild(settingsMenu);
+        AddChild(gameUI);
     }
 
     public override void Tick()
@@ -123,10 +126,12 @@ public partial class GameManager : Panel
     }
 
     public void InitPlayer(ulong _steamid, CharacterBase _char, bool _rightSide){
-        var _position = new Vector2((1920/5)*1,1080/2);
-        if(_rightSide) _position = new Vector2((1920/5)*4-300,1080/2);
+        var _position = new Vector2(508,900);
         var _recPosition = new Vector2(176,70);
-        if(_rightSide) _recPosition = new Vector2(1036,70);
+        if(_rightSide){
+            _position = new Vector2(1367,900);
+            _recPosition = new Vector2(1036,70);
+        }
         SpawnCharacter(_steamid, _char, _position, _rightSide);
         SpawnReceptors(_steamid, _recPosition, _rightSide);
     }

@@ -1,0 +1,45 @@
+GameUI
+{  
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    justify-content: space-around;
+    transition: all 1s ease-out;
+    pointer-events: none;
+
+    &.hideLeft
+    {
+        width: 0px;
+        height: 0px;
+        left: -1920px;
+        top: 540px;
+    }
+
+    &.hideRight
+    {
+        width: 0px;
+        height: 0px;
+        left: 2880px;
+        top: 540px;
+    }
+
+
+    .score
+    {
+        top: 0px;
+        left: 0px;
+        color: black;
+        font-family: VCR_OSD_MONO;
+        font-size: 42px;
+        text-align: center;
+        justify-self: center;
+        font-weight: bold;
+        border: 3px solid transparent;
+        transition: all 0.05s ease-in;
+        transform: scale( 1 );
+        z-index: -15;
+    }
+
+}

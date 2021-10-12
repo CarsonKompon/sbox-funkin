@@ -19,9 +19,9 @@ public partial class Boyfriend : Entity
     public TimeSince[] Press = new TimeSince[4];
     public Vector2 Offset = Vector2.Zero;
 
+    [Net, Predicted] public int Score {get;set;} = 0;
     [Net, Predicted] public int Combo {get;set;} = 0;
     [Net, Predicted] public int ComboBreaks {get;set;} = 0;
-    [Net, Predicted] public int Score {get;set;} = 0;
     [Net, Predicted] public new Vector2 Position {get; set;} = Vector2.Zero;
     [Net, Predicted] public BoyfriendState State {get; set;} = BoyfriendState.Idle;
 
@@ -78,30 +78,41 @@ public partial class Boyfriend : Entity
         }
         while(_animTime >= _frameTime){
             _currentFrame++;
-            // if(_currentFrame > _maxFrames) _currentFrame -= _maxFrames;
-            if(_currentFrame > _maxFrames) _currentFrame = _maxFrames;
+            if(State == BoyfriendState.Idle){
+                if(_currentFrame > _maxFrames) _currentFrame -= _maxFrames;
+            }else{
+                if(_currentFrame > _maxFrames) _currentFrame = _maxFrames;
+            }
             _animTime -= _frameTime;
         }
         Actor.Sprite = _sprite + "_" + String.Format("{0:00}", _currentFrame) + ".png";
 
         //Set the position of the actor
-        Actor.Position = Position;
+        Actor.Position = Position-Character.origin;
 
         //Flip the Actor if facing right
         Actor.SetClass("flip", Character.facingRight);
         
         //Set the antialiasing flag
         //Actor.SetClass("pixel", !Character.antialiasing);
+
+        //Set the Score in GUI
+        if(MustHit){
+            GameManager.gameUI.RightScore.Text = "Score: " + Score.ToString();
+        }else{
+            GameManager.gameUI.LeftScore.Text = "Score: " + Score.ToString();
+        }
     }
 
     [ClientRpc]
-	public static void SetState(ulong _steamid, int _state){
+	public static void SetState(ulong _steamid, int _state, int _score){
 		foreach(Boyfriend _ply in Players){
             if(_ply.PlayerId == _steamid){
                 if((int)_ply.State != _state) _ply.AnimationTimer = 0f;
                 _ply.State = (BoyfriendState)_state;
                 _ply.StateTimer = 0f;
                 _ply.Combo++;
+                _ply.Score += _score;
                 return;
             }
         }
@@ -112,6 +123,7 @@ public partial class Boyfriend : Entity
 		foreach(Boyfriend _ply in Players){
             if(_ply.PlayerId == _steamid){
                 _ply.Combo = 0;
+                _ply.Score -= 10;
                 _ply.ComboBreaks++;
                 return;
             }

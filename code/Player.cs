@@ -27,6 +27,8 @@ partial class FunkinPlayer : Player
     [Net] public bool inputRightPress {get; set;} = false;
     [Net] public bool inputRightDown {get; set;} = false;
 
+    [Net, Predicted] public int score {get; set;} = 0;
+
     [Net] public bool isActive {get; set;} = false;
 
 	public override void Respawn()
@@ -68,9 +70,21 @@ partial class FunkinPlayer : Player
             var _note = GameManager.NextNote(Boyfriend.GetMustHit(_steamid));
             if(_note != null){
                 if(Boyfriend.GetMustHit(_steamid) == _note.MustHit){
-                    if(GameManager.Current.SongTime >= _note.Time-0.18f && GameManager.Current.SongTime <= _note.Time+0.18f){
+                    if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Shit && GameManager.Current.SongTime <= _note.Time+NoteTimings.Shit){
                         if(Boyfriend.GetPress(_steamid, _note.Direction) <= Time.Delta){
-                            Boyfriend.SetState(_steamid, _note.Direction);
+                            var _timing = NoteTimings.Shit;
+                            if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Sick && GameManager.Current.SongTime <= _note.Time+NoteTimings.Sick){
+                                _timing = NoteTimings.Sick;
+                            }else if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Good && GameManager.Current.SongTime <= _note.Time+NoteTimings.Good){
+                                _timing = NoteTimings.Good;
+                            }else if(GameManager.Current.SongTime >= _note.Time-NoteTimings.Bad && GameManager.Current.SongTime <= _note.Time+NoteTimings.Bad){
+                                _timing = NoteTimings.Bad;
+                            }
+                            var _score = 50;
+                            if(_timing == NoteTimings.Bad) _score = 100;
+                            if(_timing == NoteTimings.Good) _score = 200;
+                            if(_timing == NoteTimings.Sick) _score = 350;
+                            Boyfriend.SetState(_steamid, _note.Direction, _score);
                             Boyfriend.SetPress(_steamid, _note.Direction, 10f);
                             _note.Actor.Delete();
                             _note.Delete();
@@ -81,8 +95,8 @@ partial class FunkinPlayer : Player
                                     if(Boyfriend.GetPress(_steamid, i) <= Time.Delta){
                                         Boyfriend.SetPress(_steamid, i, 10f);
                                         Boyfriend.BreakCombo(_steamid);
-                                        _note.Actor.Delete();
-                                        _note.Delete();
+                                        //_note.Actor.Delete();
+                                        //_note.Delete();
                                         GameManager.Notes.Remove(_note);
                                         break;
                                     }

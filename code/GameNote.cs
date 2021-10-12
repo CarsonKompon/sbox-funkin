@@ -59,7 +59,7 @@ public partial class GameNote : Entity
 
         if(!ActorPassed && GameManager.Current.SongTime >= Time){
             if(IsBot){
-                Boyfriend.SetState(0, Direction);
+                Boyfriend.SetState(0, Direction, 0);
                 ActorPassed = true;
                 GameNote.Notes.Remove(this);
                 Actor.Delete();
