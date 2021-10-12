@@ -68,7 +68,7 @@ public partial class FunkinGame : Sandbox.Game
             foreach(var _lobby in CurrentLobbies){
                 if(_lobby.LeftPlayer == 0) {
                     _lobby.LeftPlayer = _steamid;
-                    GameManager.StartGame(FunkinGame.GetChartFromName("roses"));
+                    GameManager.StartGame(FunkinGame.GetChartFromName("roses"), _lobby.RightPlayer, _lobby.LeftPlayer);
                     GameManager.gameUI.Show = true;
                     break;
                 }

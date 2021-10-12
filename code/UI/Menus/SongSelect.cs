@@ -52,7 +52,7 @@ public partial class SongSelect : Panel
         
         Pos = -1;
 
-        GameManager.StartGame(FunkinGame.GetChartFromName(_btn.Text));
+        GameManager.StartGame(FunkinGame.GetChartFromName(_btn.Text), Local.Client.SteamId, 0);
         GameManager.gameUI.Show = true;
     }
 

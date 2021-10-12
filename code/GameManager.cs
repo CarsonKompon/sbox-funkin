@@ -73,9 +73,10 @@ public partial class GameManager : Panel
 
 	}
 
-    public static void StartGame(ChartBase _chart){
-        Current.InitPlayer(Local.Client.SteamId, new CharacterBoyfriend(), true);
-        Current.InitPlayer(0, new CharacterSenpaiAngry(), false);
+    [ClientRpc]
+    public static void StartGame(ChartBase _chart, ulong _rightId, ulong _leftId){
+        Current.InitPlayer(_rightId, new CharacterBoyfriend(), true);
+        Current.InitPlayer(_leftId, new CharacterSenpaiAngry(), false);
 
         Current.SongTime = -2f;
         Current.Chart = _chart;
