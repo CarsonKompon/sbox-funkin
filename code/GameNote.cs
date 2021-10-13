@@ -2,10 +2,10 @@ using Sandbox;
 using System.Collections.Generic;
 
 public static class NoteTimings {
-    public const float Shit = 0.162f;
+    public const float Shit = 0.166f;
     public const float Bad = 0.135f;
-    public const float Good = 0.092f;
-    public const float Sick = 0.033f;
+    public const float Good = 0.090f;
+    public const float Sick = 0.045f;
 }
 
 public partial class GameNote : Entity
@@ -60,7 +60,7 @@ public partial class GameNote : Entity
 
         if(!ActorPassed && GameManager.Current.SongTime >= Time){
             if(IsBot){
-                Boyfriend.SetState(PlayerId, Direction, 0);
+                Boyfriend.SetState(PlayerId, Direction, 350);
                 ActorPassed = true;
                 GameNote.Notes.Remove(this);
                 Actor.Delete();
@@ -85,7 +85,7 @@ public partial class GameNote : Entity
         if(HasActor && !ActorPassed){
             foreach(var _rec in Receptor.Receptors){
                 if(_rec.MustHit == MustHit && _rec.Direction == Direction){
-                    //if(_rec.PlayerId == 0) IsBot = true;
+                    if(_rec.PlayerId == 0) IsBot = true;
                     PlayerId = _rec.PlayerId;
                     Position = new Vector2(_rec.Actor.Position.x, _rec.Actor.Position.y+(Time-GameManager.Current.SongTime)*800*GameManager.Current.Chart.Chart.Song.ScrollSpeed);
                     break;

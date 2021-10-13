@@ -101,17 +101,17 @@ public partial class Boyfriend : Entity
             GameManager.gameUI.LeftScore.Text = "Score: " + Score.ToString();
         }
 
-        //Note Hit Detection
-        if(PlayerId == 0 && GameNote.Notes.Count > 0){
-            var _notes = GameManager.NextNotes(MustHit);
-            foreach(var _note in _notes){
-                if(_note != null){
-                    if(_note.MustHit == MustHit){
-                        Press[_note.Direction] = 0f;
-                    }
-                }
-            }
-        }
+        // //Note Hit Detection
+        // if(PlayerId == 0 && GameNote.Notes.Count > 0){
+        //     var _notes = GameManager.NextNotes(MustHit);
+        //     foreach(var _note in _notes){
+        //         if(_note != null){
+        //             if(_note.MustHit == MustHit){
+        //                 Press[_note.Direction] = 0f;
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     [ClientRpc]
