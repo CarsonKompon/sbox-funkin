@@ -17,7 +17,6 @@ public partial class Boyfriend : Entity
     public TimeSince AnimationTimer;
     public TimeSince StateTimer;
     public TimeSince[] Press = new TimeSince[4];
-    public Vector2 Offset = Vector2.Zero;
 
     [Net, Predicted] public int Score {get;set;} = 0;
     [Net, Predicted] public int Combo {get;set;} = 0;
@@ -35,7 +34,6 @@ public partial class Boyfriend : Entity
         Actor = new();
         Actor.Sprite = "/sprites/boyfriend/idle_01.png";
         Actor.AddClass( _char.id );
-        Offset = new Vector2(Actor.Style.Left.ToString().ToInt(), Actor.Style.Top.ToString().ToInt());
         Actor.Position = Position;
 
         Players.Add(this);
@@ -101,6 +99,18 @@ public partial class Boyfriend : Entity
             GameManager.gameUI.RightScore.Text = "Score: " + Score.ToString();
         }else{
             GameManager.gameUI.LeftScore.Text = "Score: " + Score.ToString();
+        }
+
+        //Note Hit Detection
+        if(PlayerId == 0 && GameNote.Notes.Count > 0){
+            var _notes = GameManager.NextNotes(MustHit);
+            foreach(var _note in _notes){
+                if(_note != null){
+                    if(_note.MustHit == MustHit){
+                        Press[_note.Direction] = 0f;
+                    }
+                }
+            }
         }
     }
 

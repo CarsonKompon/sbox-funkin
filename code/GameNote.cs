@@ -17,6 +17,7 @@ public partial class GameNote : Entity
     public float Length;
     public bool MustHit;
 
+    public ulong PlayerId = 0;
     public bool Missed = false;
     public bool IsBot = false;
     public bool ActorPassed = false;
@@ -59,14 +60,14 @@ public partial class GameNote : Entity
 
         if(!ActorPassed && GameManager.Current.SongTime >= Time){
             if(IsBot){
-                Boyfriend.SetState(0, Direction, 0);
+                Boyfriend.SetState(PlayerId, Direction, 0);
                 ActorPassed = true;
                 GameNote.Notes.Remove(this);
                 Actor.Delete();
                 Delete();
             }else{
                 if(!Missed && GameManager.Current.SongTime > Time+NoteTimings.Shit){
-                    Boyfriend.BreakCombo(Local.Client.SteamId);
+                    Boyfriend.BreakCombo(PlayerId);
                     GameNote.Notes.Remove(this);
                     Missed = true;
                 }
@@ -84,7 +85,8 @@ public partial class GameNote : Entity
         if(HasActor && !ActorPassed){
             foreach(var _rec in Receptor.Receptors){
                 if(_rec.MustHit == MustHit && _rec.Direction == Direction){
-                    if(_rec.PlayerId == 0) IsBot = true;
+                    //if(_rec.PlayerId == 0) IsBot = true;
+                    PlayerId = _rec.PlayerId;
                     Position = new Vector2(_rec.Actor.Position.x, _rec.Actor.Position.y+(Time-GameManager.Current.SongTime)*800*GameManager.Current.Chart.Chart.Song.ScrollSpeed);
                     break;
                 }
