@@ -9,17 +9,20 @@ public partial class MenuBackground : Base2D
 {
     public Base2D FilterPanel { get; set; }
 
-    public float ToOpacity = 1.0f;
-    public float Opacity = 1.0f;
+    public static float ToOpacity = 1.0f;
+    public static float Opacity = 1.0f;
 
-    public float ToHue = 50.0f;
-    public float Hue = 50.0f;
+    public static float ToHue = 50.0f;
+    public static float Hue = 50.0f;
+
+    public static MenuBackground This;
 
     public bool Show = true;
 
     public MenuBackground()
     {
         Position = new Vector2(-240, -270/2);
+        This = this;
     }
 
     public override void Tick()
@@ -37,12 +40,19 @@ public partial class MenuBackground : Base2D
         base.Tick();
     }
 
-    public void SetHue(float _h){
+    [ClientRpc]
+    public static void SetHue(float _h){
         ToHue = _h;
     }
 
-    public void SetOpacity(float _o){
+    [ClientRpc]
+    public static void SetOpacity(float _o){
         ToOpacity = _o;
+    }
+
+    [ClientRpc]
+    public static void SetPosition(float _y){
+        This.Position = new Vector2(This.Position.x, _y);
     }
    
 }

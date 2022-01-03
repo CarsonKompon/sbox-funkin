@@ -10,14 +10,15 @@ public static class NoteTimings {
 
 public partial class GameNote : Entity
 {
-    public static List<GameNote> Notes = new();
+    //public static List<GameNote> Notes = new();
 
     public float Time;
     public int Direction;
     public float Length;
     public bool MustHit;
 
-    public ulong PlayerId = 0;
+    [Net, Predicted] public ulong PlayerId {get;set;} = 0;
+    [Net] public Lobby Lobby {get;set;}
     public bool Missed = false;
     public bool IsBot = false;
     public bool ActorPassed = false;
@@ -26,14 +27,15 @@ public partial class GameNote : Entity
 
     [Net, Predicted] public new Vector2 Position {get; set;} = new Vector2( 1920/2, 1080/2 );
 
-    public GameNote(float _time, float _direction, float _length, bool _mustHit)
+    public GameNote(Lobby _lobby, float _time, float _direction, float _length, bool _mustHit)
     {
+        Lobby = _lobby;
         Time = _time;
         Direction = (int)_direction;
         Length = _length;
         MustHit = _mustHit;
 
-        Notes.Add(this);
+        //Notes.Add(this);
     }
 
     [Event.Tick]
@@ -62,20 +64,20 @@ public partial class GameNote : Entity
             if(IsBot){
                 Boyfriend.SetState(PlayerId, Direction, 350);
                 ActorPassed = true;
-                GameNote.Notes.Remove(this);
+                if(IsServer) Lobby.Notes.Remove(this);
                 Actor.Delete();
                 Delete();
             }else{
                 if(!Missed && GameManager.Current.SongTime > Time+NoteTimings.Shit){
                     Boyfriend.BreakCombo(PlayerId);
-                    GameNote.Notes.Remove(this);
+                    if(IsServer) Lobby.Notes.Remove(this);
                     Missed = true;
                 }
                 if(GameManager.Current.SongTime >= Time+0.5f){
                     ActorPassed = true;
                     Actor.Delete();
                     Delete();
-                    GameNote.Notes.Remove(this);
+                    if(IsServer) Lobby.Notes.Remove(this);
                 }
             }
         }
@@ -87,7 +89,11 @@ public partial class GameNote : Entity
                 if(_rec.MustHit == MustHit && _rec.Direction == Direction){
                     if(_rec.PlayerId == 0) IsBot = true;
                     PlayerId = _rec.PlayerId;
-                    Position = new Vector2(_rec.Actor.Position.x, _rec.Actor.Position.y+(Time-GameManager.Current.SongTime)*800*GameManager.Current.Chart.Chart.Song.ScrollSpeed);
+                    if(GameManager.Downscroll){
+                        Position = new Vector2(_rec.Actor.Position.x, _rec.Actor.Position.y-(Time-GameManager.Current.SongTime)*800*GameManager.Current.Chart.Chart.Song.ScrollSpeed);
+                    }else{
+                        Position = new Vector2(_rec.Actor.Position.x, _rec.Actor.Position.y+(Time-GameManager.Current.SongTime)*800*GameManager.Current.Chart.Chart.Song.ScrollSpeed);
+                    }
                     break;
                 }
             }

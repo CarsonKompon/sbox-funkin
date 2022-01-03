@@ -8,7 +8,9 @@ public partial class MainMenu : Panel
 
     public Panel RootBody { get; set; }
 
-    public int Pos = 0;
+    public static bool Multiplayer = false;
+
+    public static int Pos = 0;
 
     public MainMenu()
     {
@@ -22,33 +24,41 @@ public partial class MainMenu : Panel
     }
 
     public void buttonSingleplayer( Button _btn ){
+        Multiplayer = false;
         Sound.FromScreen("menu_confirm");
-        GameManager.menuBackground.SetHue((float)MenuColors.Blue);
-        GameManager.songSelect.Pos = 0;
+        MenuBackground.SetHue((float)MenuColors.Blue);
+        SongSelect.Show();
         Pos = -1;
     }
 
     public void buttonMultiplayer( Button _btn ){
+        Multiplayer = true;
         Sound.FromScreen("menu_confirm");
-        GameManager.menuBackground.SetOpacity(0.0f);
-        
+        MenuBackground.SetHue((float)MenuColors.Blue);
+        SongSelect.Show();
         Pos = -1;
 
-        FunkinGame.JoinLobby(Local.Client.SteamId);
+        //GameManager.menuBackground.SetOpacity(0.0f);
+        //FunkinGame.JoinLobby(Local.Client.SteamId);
     }
 
     public void buttonSettings( Button _btn ){
         Sound.FromScreen("menu_confirm");
-        GameManager.menuBackground.SetHue((float)MenuColors.Red);
-        GameManager.settingsMenu.Pos = 0;
+        MenuBackground.SetHue((float)MenuColors.Red);
+        SettingsMenu.Show();
         Pos = 1;
     }
 
     public void buttonHover( Button _btn ){
         if(_btn.HasHovered){
             Sound.FromScreen("menu_hover");
-            GameManager.menuBackground.Position = new Vector2(GameManager.menuBackground.Position.x, (Mouse.Position.y/Screen.Height)*-270);
+            MenuBackground.SetPosition((Mouse.Position.y/Screen.Height)*-270);
         }
+    }
+
+    [ClientRpc]
+    public static void Show(int _pos = 0){
+        Pos = _pos;
     }
 
 }

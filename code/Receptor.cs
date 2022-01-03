@@ -14,17 +14,22 @@ public partial class Receptor : Entity
     public Base2D Actor;
     public ulong PlayerId;
     public TimeSince AnimationTimer;
+    public Lobby Lobby;
 
-    public Receptor(ulong _steamid, int _direction, Vector2 _position, bool _mustHit)
+    public Receptor(Lobby _lobby, ulong _steamid, int _direction, Vector2 _position, bool _mustHit)
     {
+        Lobby = _lobby;
         Direction = _direction;
         PlayerId = _steamid;
         MustHit = _mustHit;
 
-        Actor = new();
-        Actor.Sprite = "/sprites/arrows/left_unpressed.png";
-        Actor.AddClass("receptor");
-        Actor.Position = _position;
+        if(IsClient){
+            Actor = new();
+            //Actor.Sprite = "/sprites/arrows/left_unpressed.png";
+            Actor.AddClass("receptor");
+            Actor.Position = _position;
+            FunkinGame.UI.AddChild(Actor);
+        }
 
         Receptors.Add(this);
 

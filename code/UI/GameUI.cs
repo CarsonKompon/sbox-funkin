@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public partial class GameUI : Panel
 {
-    public Label LeftScore { get; set; }
-    public Label RightScore { get; set; }
+    public static Label LeftScore { get; set; }
+    public static Label RightScore { get; set; }
 
-    public bool Show = false;
+    public static bool show = false;
 
     public GameUI()
     {
@@ -19,9 +19,29 @@ public partial class GameUI : Panel
 
     public override void Tick()
     {
-        SetClass("hideRight", !Show);
+        SetClass("hideRight", !show);
         //RootBody.SetClass( "hideLeft", Pos == -1);
         //RootBody.SetClass( "hideRight", Pos == 1);
+    }
+
+    [ClientRpc]
+    public static void SetRightScore(int _score){
+        RightScore.Text = "Score: " + _score.ToString();
+    }
+
+    [ClientRpc]
+    public static void SetLeftScore(int _score){
+        LeftScore.Text = "Score: " + _score.ToString();
+    }
+
+    [ClientRpc]
+    public static void Show(bool _show = true){
+        show = _show;
+    }
+
+    [ClientRpc]
+    public static void Hide(bool _hide = true){
+        show = !_hide;
     }
 
     

@@ -10,34 +10,52 @@ public partial class Boyfriend : Entity
 
     public static List<Boyfriend> Players = new();
 
-    public bool MustHit = false;
-    public CharacterBase Character = new CharacterBoyfriend();
-    public Base2D Actor;
-    public ulong PlayerId;
+    [Net] public bool MustHit {get;set;} = false;
+    [Net] public CharacterBase Character {get;set;} = new CharacterBoyfriend();
+    public Base2D Actor = null;
+    [Net] public ulong PlayerId {get;set;} = 0;
     public TimeSince AnimationTimer;
     public TimeSince StateTimer;
-    public TimeSince[] Press = new TimeSince[4];
+    [Net, Predicted] public TimeSince[] Press {get;set;} = new TimeSince[4];
 
+    [Net] public Lobby Lobby {get;set;}
+    [Net, Predicted] public string SongVote {get;set;} = "roses";
     [Net, Predicted] public int Score {get;set;} = 0;
     [Net, Predicted] public int Combo {get;set;} = 0;
     [Net, Predicted] public int ComboBreaks {get;set;} = 0;
     [Net, Predicted] public new Vector2 Position {get; set;} = Vector2.Zero;
     [Net, Predicted] public BoyfriendState State {get; set;} = BoyfriendState.Idle;
 
-    public Boyfriend(ulong _steamid, CharacterBase _char, Vector2 _position, bool _mustHit)
+
+    public Boyfriend(Lobby _lobby, ulong _steamid, string _char, Vector2 _position, bool _mustHit)
     {
+        //Transmit = TransmitType.Always;
+        
+        Lobby = _lobby;
         PlayerId = _steamid;
-        Character = _char;
+        Character = FunkinGame.GetCharacterFromId(_char);
         Position = _position;
         MustHit = _mustHit;
 
-        Actor = new();
-        Actor.Sprite = "/sprites/boyfriend/idle_01.png";
-        Actor.AddClass( _char.id );
-        Actor.Position = Position;
-
         Players.Add(this);
+        if(IsServer){
+            Log.Info("added to ents");
+            FunkinGame.CurrentEntities.Add(this);
+        }
+    }
 
+    public override void Spawn()
+    {
+        base.Spawn();
+        Log.Info("Spawning " + PlayerId.ToString());
+        if(IsClient){
+            Log.Info("Making the guy");
+            Actor = new();
+            Actor.Sprite = "/sprites/boyfriend/idle_01.png";
+            Actor.AddClass( Character.id );
+            Actor.Position = Position;
+            FunkinGame.UI.AddChild(Actor);
+        }
     }
 
     [Event.Tick]
@@ -58,60 +76,61 @@ public partial class Boyfriend : Entity
         //     Delete();
         //     return;
         // }
+        
 
         //Set sprite based on state and animation timer
-        var _sprite = Character.GetSpriteFromState(State);
-        var _currentFrame = 1;
-        var _maxFrames = 2;
-        var _frameTime = 0.12f;
-        var _animTime = AnimationTimer;
+        // var _sprite = Character.GetSpriteFromState(State);
+        // var _currentFrame = 1;
+        // var _maxFrames = 2;
+        // var _frameTime = 0.12f;
+        // var _animTime = AnimationTimer;
 
-        if(State == BoyfriendState.Idle){
-            _maxFrames = Character.idleFrames;
-            _frameTime = (60/GameManager.BPM)/_maxFrames;
-        }else{
-            if(StateTimer > 60/GameManager.BPM/2){
-                State = BoyfriendState.Idle;
-            }
-        }
-        while(_animTime >= _frameTime){
-            _currentFrame++;
-            if(State == BoyfriendState.Idle){
-                if(_currentFrame > _maxFrames) _currentFrame -= _maxFrames;
-            }else{
-                if(_currentFrame > _maxFrames) _currentFrame = _maxFrames;
-            }
-            _animTime -= _frameTime;
-        }
-        Actor.Sprite = _sprite + "_" + String.Format("{0:00}", _currentFrame) + ".png";
-
-        //Set the position of the actor
-        Actor.Position = Position-Character.origin;
-
-        //Flip the Actor if facing right
-        Actor.SetClass("flip", Character.facingRight);
-        
-        //Set the antialiasing flag
-        //Actor.SetClass("pixel", !Character.antialiasing);
-
-        //Set the Score in GUI
-        if(MustHit){
-            GameManager.gameUI.RightScore.Text = "Score: " + Score.ToString();
-        }else{
-            GameManager.gameUI.LeftScore.Text = "Score: " + Score.ToString();
-        }
-
-        // //Note Hit Detection
-        // if(PlayerId == 0 && GameNote.Notes.Count > 0){
-        //     var _notes = GameManager.NextNotes(MustHit);
-        //     foreach(var _note in _notes){
-        //         if(_note != null){
-        //             if(_note.MustHit == MustHit){
-        //                 Press[_note.Direction] = 0f;
-        //             }
-        //         }
+        // if(State == BoyfriendState.Idle){
+        //     _maxFrames = Character.idleFrames;
+        //     _frameTime = (60/Lobby.BPM)/_maxFrames;
+        // }else{
+        //     if(StateTimer > 60/Lobby.BPM/2){
+        //         State = BoyfriendState.Idle;
         //     }
         // }
+        // while(_animTime >= _frameTime){
+        //     _currentFrame++;
+        //     if(State == BoyfriendState.Idle){
+        //         if(_currentFrame > _maxFrames) _currentFrame -= _maxFrames;
+        //     }else{
+        //         if(_currentFrame > _maxFrames) _currentFrame = _maxFrames;
+        //     }
+        //     _animTime -= _frameTime;
+        // }
+        // Actor.Sprite = _sprite + "_" + String.Format("{0:00}", _currentFrame) + ".png";
+
+        // //Set the position of the actor
+        // Actor.Position = Position-Character.origin;
+
+        // //Flip the Actor if facing right
+        // Actor.SetClass("flip", Character.facingRight);
+        
+        // //Set the antialiasing flag
+        // //Actor.SetClass("pixel", !Character.antialiasing);
+
+        // //Set the Score in GUI
+        // if(MustHit){
+        //     GameUI.SetRightScore(Score);
+        // }else{
+        //     GameUI.SetLeftScore(Score);
+        // }
+
+        // // //Note Hit Detection
+        // // if(PlayerId == 0 && GameNote.Notes.Count > 0){
+        // //     var _notes = GameManager.NextNotes(MustHit);
+        // //     foreach(var _note in _notes){
+        // //         if(_note != null){
+        // //             if(_note.MustHit == MustHit){
+        // //                 Press[_note.Direction] = 0f;
+        // //             }
+        // //         }
+        // //     }
+        // // }
     }
 
     [ClientRpc]

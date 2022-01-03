@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public partial class GameManager : Panel
 {
 
-    //public static List<ulong> Boyfriends {get; set;} = new();
+    public static List<ulong> Boyfriends {get; set;} = new();
 
     public static GameManager Current;
 
@@ -22,6 +22,7 @@ public partial class GameManager : Panel
     public static List<GameNote> Notes = new();
 
     public static float BPM = 120;
+    public static bool Downscroll = false;
 
     public bool InGame = false;
     public int Countdown = 3;
@@ -32,12 +33,12 @@ public partial class GameManager : Panel
     {
         Current = this;
 
-        AddChild(menuBackground);
-        AddChild(disclaimerPanel);
-        AddChild(mainMenu);
-        AddChild(songSelect);
-        AddChild(settingsMenu);
-        AddChild(gameUI);
+        // AddChild(menuBackground);
+        // AddChild(disclaimerPanel);
+        // AddChild(mainMenu);
+        // AddChild(songSelect);
+        // AddChild(settingsMenu);
+        // AddChild(gameUI);
     }
 
     public override void Tick()
@@ -73,63 +74,65 @@ public partial class GameManager : Panel
 
 	}
 
-    public void LoadNotes(ChartBase _chart){
-        Notes = new();
-        foreach(var _section in _chart.Chart.Song.Sections){
-            foreach(var _note in _section.Notes){
-                var _time = StepsToTime(_note[0].ToString().ToFloat());
-                var _direction = _note[1].ToString().ToFloat();
-                var _length = _note[2].ToString().ToFloat();
-                var _mustHit = _section.MustHitSection;
-                if(_direction > 3){
-                    _direction -= 3;
-                    _mustHit = !_mustHit;
-                }
-                var _gameNote = new GameNote(_time, _direction, _length, _mustHit);
-                Notes.Add(_gameNote);
-            }
-        }
-    }
+    // public void LoadNotes(ChartBase _chart){
+    //     Notes = new();
+    //     foreach(var _section in _chart.Chart.Song.Sections){
+    //         foreach(var _note in _section.Notes){
+    //             var _time = StepsToTime(_note[0].ToString().ToFloat());
+    //             var _direction = _note[1].ToString().ToFloat();
+    //             var _length = _note[2].ToString().ToFloat();
+    //             var _mustHit = _section.MustHitSection;
+    //             if(_direction > 3){
+    //                 _direction -= 3;
+    //                 _mustHit = !_mustHit;
+    //             }
+    //             var _gameNote = new GameNote(_time, _direction, _length, _mustHit);
+    //             Notes.Add(_gameNote);
+    //         }
+    //     }
+    // }
 
-    public static List<GameNote> NextNotes(bool _mustHit){
-        List<GameNote> _toReturn = new();
-        foreach(var _note in Notes){
-            if(_note.Time > Current.SongTime - NoteTimings.Shit && _note.Time < Current.SongTime + NoteTimings.Shit && _note.MustHit == _mustHit){
-                _toReturn.Add(_note);
-            }
-        }
-        return _toReturn;
-    }
+    // public static List<GameNote> NextNotes(bool _mustHit){
+    //     List<GameNote> _toReturn = new();
+    //     foreach(var _note in Notes){
+    //         if(_note.Time > Current.SongTime - NoteTimings.Shit && _note.Time < Current.SongTime + NoteTimings.Shit && _note.MustHit == _mustHit){
+    //             _toReturn.Add(_note);
+    //         }
+    //     }
+    //     return _toReturn;
+    // }
 
-    //Used to convert funkin steps format to time in seconds
-    public float StepsToTime(float _steps){
-        //400 Steps = 1 Beat ( 1 Beat = 60s / BPM )
-        return (_steps / 500) * (60 / BPM);
-    }
+    // //Used to convert funkin steps format to time in seconds
+    // public float StepsToTime(float _steps){
+    //     //400 Steps = 1 Beat ( 1 Beat = 60s / BPM )
+    //     return (_steps / 500) * (60 / BPM);
+    // }
 
-    public void InitPlayer(ulong _steamid, CharacterBase _char, bool _rightSide){
-        var _position = new Vector2(508,900);
-        var _recPosition = new Vector2(176,70);
-        if(_rightSide){
-            _position = new Vector2(1367,900);
-            _recPosition = new Vector2(1036,70);
-        }
-        SpawnCharacter(_steamid, _char, _position, _rightSide);
-        SpawnReceptors(_steamid, _recPosition, _rightSide);
-    }
+    // public void InitPlayer(ulong _steamid, CharacterBase _char, bool _rightSide){
+    //     var _position = new Vector2(508,900);
+    //     var _recPosition = new Vector2(176,70);
+    //     if(_rightSide){
+    //         _position = new Vector2(1367,900);
+    //         _recPosition = new Vector2(1036,70);
+    //     }
+    //     if(Downscroll) _recPosition = new Vector2(_recPosition.x, 1080-_recPosition.y-162);
+    //     SpawnCharacter(_steamid, _char, _position, _rightSide);
+    //     SpawnReceptors(_steamid, _recPosition, _rightSide);
+    // }
 
-    public void SpawnCharacter(ulong _steamid, CharacterBase _char, Vector2 _position, bool _mustHit){
-        var _bf = new Boyfriend(_steamid, _char, _position, _mustHit);
-        AddChild(_bf.Actor);
-        //Boyfriends.Add(_steamid);
-    }
+    // public Boyfriend SpawnCharacter(ulong _steamid, CharacterBase _char, Vector2 _position, bool _mustHit){
+    //     var _bf = new Boyfriend(_steamid, _char, _position, _mustHit);
+    //     AddChild(_bf.Actor);
+    //     return _bf;
+    //     //Boyfriends.Add(_steamid);
+    // }
 
-    public void SpawnReceptors(ulong _steamid, Vector2 _position, bool _mustHit){
-        var i=0;
-        while(i <= 3){
-            var _rec = new Receptor(_steamid, i, _position + Vector2.Left*(162+6)*i, _mustHit);
-            AddChild(_rec.Actor);
-            i++;
-        }
-    }
+    // public void SpawnReceptors(ulong _steamid, Vector2 _position, bool _mustHit){
+    //     var i=0;
+    //     while(i <= 3){
+    //         var _rec = new Receptor(_steamid, i, _position + Vector2.Left*(162+6)*i, _mustHit);
+    //         AddChild(_rec.Actor);
+    //         i++;
+    //     }
+    // }
 }
